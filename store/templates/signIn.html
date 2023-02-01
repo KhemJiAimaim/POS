@@ -1,0 +1,15 @@
+{% extends "layouts/layouts.html" %}
+{% block title %} Phacharamon Shop {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container mt-5">
+    <h2 align="center">ลงชื่อเข้าใช้ระบบ</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{form | crispy}}
+        <div align="right">
+            <input type="submit" value="Login" class="btn btn-success">
+        </div>
+    </form>
+</div>
+{% endblock %}
