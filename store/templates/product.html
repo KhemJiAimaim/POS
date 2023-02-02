@@ -3,10 +3,11 @@
 {% load static %}
 
 <style>
-  .img .card-img-top {
-    width: 70%;
-    border-top-left-radius: calc(.25rem - 1px);
-    border-top-right-radius: calc(.25rem - 1px);
+  .table {
+    width: 80%;
+    margin-bottom: 1rem;
+    color: #000000;
+    margin-left: 10%;
   }
 </style>
 
@@ -34,7 +35,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="home-content">
+<div class="home-content" style=" margin-left: 5%;  width: 90%;">
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -43,44 +44,74 @@
         <th scope="col" width="10%">ราคา</th>
         <th scope="col" width="10%">ต้นทุน</th>
         <th scope="col" width="10%">คลังสินค้า</th>
-        <th scope="col" width="15%">วันหมดอายุ</th>
+        <th scope="col" width="10%">วันหมดอายุ</th>
+        <th scope="col" width="10%">สถานะคลังสินค้า</th>
+        <th scope="col" width="5%">แก้ไข</th>
+        <th scope="col" width="5%">ลบ</th>
 
       </tr>
     </thead>
-    <tbody>
+    <tbody style="font-size: 18px; font-weight: bold;">
       {% for products in product %}
       <tr>
         <td class="cart_product">
-          <h6>{{products.barcode}}</h6>
+          <p>{{products.barcode}}</p>
         </td>
         <td class="cart_description">
-          <h6>{{products.name}}</h6>
+          <p>{{products.name}}</p>
         </td>
-
-
         <td class="cart_price">
           <p>{{products.price}}</p>
         </td>
         <td class="cart_cost">
           <p>{{products.cost}}</p>
         </td>
-        {% if products.stock <= 0 %} <td class="cart_stock">
-          <p class=" text-danger font-weight-bold" style="font-size: 20px;">สินค้าหมด</p>
+        {% if products.stock <= 0 %}
+        <td class="cart_stock text-danger">
+          <p>{{products.stock}} ชิ้น</p>
+        </td>
+        {% elif products.stock <= 5 %}
+        <td class="cart_stock text-warning">
+          <p>{{products.stock}} ชิ้น</p>
+        </td>
+        {% else %}
+        <td class="cart_stock  ">
+          <p>{{products.stock}} ชิ้น</p>
+        </td>
+        {%endif%}
+
+        <td class="cart_exp">
+          <p>{{products.EXP}}</p>
+        </td>
+
+        {% if products.stock <= 0 %} <td class="cart_status">
+          <p class="text-center text-danger " style="font-size: 18px;">
+            สินค้าหมด
+          </p>
           </td>
-          {% elif products.stock <= 5 %} <td class="cart_stock">
-            <p class=" text-warning font-weight-bold" style="font-size: 20px;">สินค้าใกล้หมดสต็อก </p>
+          {% elif products.stock <= 5 %} <td class="cart_status">
+            <p class="text-center text-warning" style="font-size: 18px;">
+              สินค้าใกล้หมด
+            </p>
             </td>
             {% else %}
-            <td class="cart_stock">
-              <p>{{products.stock}}</p>
+            <td class="cart_status">
+              <p class="text-center text-success" style="font-size: 18px;">
+                ยังมีสินค้า
+              </p>
             </td>
 
             {%endif%}
-            <td class="cart_exp">
-              <p>{{products.EXP}}</p>
+            <td class="cart_edit" style="text-align: center; font-weight: bold;">
+              <a>
+                <i class='bx bx-edit'></i>
+              </a>
             </td>
-
-
+            <td class="cart_del" style="text-align: center;">
+              <a>
+                <i class='bx bx-message-square-x'></i>
+              </a>
+            </td>
             {% endfor %}
 
 

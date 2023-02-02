@@ -158,7 +158,8 @@
                         {% endif %}
 
                         <div class="card-footer">
-                            {% if products.stock <= 0 %} <h4 class="text-center text-danger font-weight-bold mb-3">
+                            {% if products.stock <= 0 %} 
+                                <h4 class="text-center text-danger font-weight-bold mb-3">
                                 สินค้าหมด</h4>
                                 {% else %}
                                 <!--<a href="{%url 'addCart' products.id%}" class="btn btn-success btn-lg btn-block "> เลือกสินค้า </a>-->
