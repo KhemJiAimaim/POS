@@ -145,15 +145,14 @@ def product(request , category_slug=None):
         product = Product.objects.all().filter(category=category_page)
     else:
         product = Product.objects.all().filter()
-    
-    paginator = Paginator(product, 12)
-    page = request.GET.get('page')
+
+
     try:
-        product = paginator.page(page)
-    except PageNotAnInteger:
-        product = paginator.page(1)
-    except EmptyPage:
-        product = paginator.page(paginator.num_pages)
+        product = Product.objects.filter(name__icontains=request.GET ['title']) | Product.objects.filter(barcode__icontains=request.GET ['title'])
+    except Exception as e:
+        pass
+    
+    
 
     return render(request, 'product.html', {
         'product':  product,

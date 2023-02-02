@@ -1,7 +1,57 @@
 {% extends "layouts/base.html" %}
-{% block title %} Phacharamon Shop {% endblock %}
 
+<style>
+  .home-section .home-content {
+    position: relative;
+    padding-top: 50px;
+  }
+</style>
+
+{% block t %}
+หมวดหมู่สินค้าทั้งหมด
+{% endblock %}
+
+{% block nav %}
+
+<div class="add" align="right">
+  <a href="{%url 'checkout_add'%}">
+    <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มหมวดหมู่">
+  </a>
+</div>
+{% endblock %}
 {% block content %}
-    <h1>All Product</h1>
-    <p>{{total}}</p>
+
+<div class="home-content">
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ชื่อหมวดหมู่</th>
+        <th scope="col">แก้ไข</th>
+        <th scope="col">ลบ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+        <td>@twitter</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 {% endblock %}

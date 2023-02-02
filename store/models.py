@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.db import models
 from django.utils.html import format_html
-
+from django.utils import timezone
 
 # Create your models here.
 
@@ -31,6 +31,7 @@ class Product(models.Model):
     stock = models.IntegerField()
     image = models.ImageField(upload_to='product' , blank=True , unique=True)
     barcode = models.CharField(max_length=255,unique=True)
+    EXP = models.DateField(default=timezone.now ) #วันหมดอายุ
     created = models.DateTimeField(auto_now_add=True) #วัน-เวลาเพิ่มสินค้า
     updated = models.DateTimeField(auto_now = True) #วัน-เวลาที่แก้ไขสินค้า
 

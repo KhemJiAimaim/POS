@@ -142,7 +142,8 @@
             <div class="col-lg-3 mt-3">
                 <div class="card shadow-sm p-1  bg-white rounded ">
 
-                    {% if products.image and products.stock <= 0 %} <a title="{{ products.description }}">
+                    {% if products.image and products.stock <= 0 %} 
+                        <a title="{{ products.description }}">
                         <img src="{{ products.image.url }}" alt="image" class="card-img-top" height="160px"
                             width="110px">
                         </a>
