@@ -6,6 +6,9 @@ from django.contrib.auth import login , authenticate,logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseRedirect
+from .forms import ProductForm 
+
 
 # Create your views here.
 @login_required (login_url='signIn')
@@ -158,6 +161,36 @@ def product(request , category_slug=None):
         'product':  product,
         'category': category_page
     })
+
+def add_product(request):
+    submitted = False
+    if request.method == "POST" :
+        form = ProductForm(request.POST , request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/product?submitted=True')
+    else:
+        form = ProductForm
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'add_product.html', {'form':form ,'submitted':submitted})
+
+def edit_product(request, product_id):
+    product = Product.objects.get(id = product_id) 
+    form = ProductForm(request.POST or None, request.FILES or None , instance=product)
+    if form.is_valid():
+            form.save()
+            return redirect('product')
+    
+    return render(request, 'edit_product.html', {
+        'product':product,
+        'form':form
+    })
+
+def deleteProduct (request , product_id):
+    product = Product.objects.get(id = product_id)
+    product.delete()
+    return redirect('product')
 
 
 def index(request):

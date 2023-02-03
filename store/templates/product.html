@@ -28,26 +28,26 @@
   </div>
 </form>
 <div class="add" align="right">
-  <a href="{%url 'checkout_add'%}">
+  <a href="{%url 'add_product' %}">
     <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
   </a>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="home-content" style=" margin-left: 5%;  width: 90%;">
+<div class="home-content" style=" margin-left: 6%;  width: 90%;">
   <table class="table">
-    <thead class="thead-dark">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
-        <th scope="col" width="15%">รหัสสินค้า</th>
-        <th scope="col" width="15%">ชื่อสินค้า</th>
+        <th scope="col" width="10%">รหัสสินค้า</th>
+        <th scope="col" width="10%">ชื่อสินค้า</th>
         <th scope="col" width="10%">ราคา</th>
         <th scope="col" width="10%">ต้นทุน</th>
-        <th scope="col" width="10%">คลังสินค้า</th>
+        <th scope="col" width="10%">จำนวนสินค้า</th>
         <th scope="col" width="10%">วันหมดอายุ</th>
         <th scope="col" width="10%">สถานะคลังสินค้า</th>
-        <th scope="col" width="5%">แก้ไข</th>
-        <th scope="col" width="5%">ลบ</th>
+        <th scope="col" width="3%">แก้ไข</th>
+        <th scope="col" width="3%">ลบ</th>
 
       </tr>
     </thead>
@@ -67,15 +67,15 @@
           <p>{{products.cost}}</p>
         </td>
         {% if products.stock <= 0 %}
-        <td class="cart_stock text-danger">
+        <td class="cart_stock text-danger text-center">
           <p>{{products.stock}} ชิ้น</p>
         </td>
         {% elif products.stock <= 5 %}
-        <td class="cart_stock text-warning">
+        <td class="cart_stock text-warning text-center">
           <p>{{products.stock}} ชิ้น</p>
         </td>
         {% else %}
-        <td class="cart_stock  ">
+        <td class="cart_stock  text-center">
           <p>{{products.stock}} ชิ้น</p>
         </td>
         {%endif%}
@@ -102,14 +102,14 @@
             </td>
 
             {%endif%}
-            <td class="cart_edit" style="text-align: center; font-weight: bold;">
-              <a>
-                <i class='bx bx-edit'></i>
+            <td class="cart_edit" style="text-align: center; ">
+              <a href="{%url 'edit_product' products.id  %}">
+                <i class='bx bx-edit text-dark'></i>
               </a>
             </td>
             <td class="cart_del" style="text-align: center;">
-              <a>
-                <i class='bx bx-message-square-x'></i>
+              <a href="{%url 'deleteProduct' products.id  %}">
+                <i class='bx bx-message-square-x text-danger'></i>
               </a>
             </td>
             {% endfor %}
