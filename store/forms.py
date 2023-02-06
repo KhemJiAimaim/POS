@@ -2,8 +2,19 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import Product
+from .models import Product , Category
 
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name',)
+        labels = {
+            'name':'',
+        }
+        widgets = {
+             'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ชื่อหมวดหมู่สินค้า'})
+             }
+             
 class ProductForm(ModelForm):
     class Meta:
         model = Product
@@ -28,7 +39,10 @@ class ProductForm(ModelForm):
             'cost': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'ต้นทุนสินค้า'}),
             'stock': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'จำนวนสินค้า'}),
             'image': forms.FileInput(attrs={'class':'form-control', 'placeholder':''}),
-            'EXP': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ปี-เดือน-วัน'}),
+            'EXP': forms.TextInput(attrs={'class':'form-control', 'placeholder':'วัน/เดือน/ปี'}),
         }
+
+
+
 
         

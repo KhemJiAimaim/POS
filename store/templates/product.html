@@ -27,27 +27,32 @@
     </div>
   </div>
 </form>
-<div class="add" align="right">
-  <a href="{%url 'add_product' %}">
-    <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
-  </a>
-</div>
+
 {% endblock %}
 
 {% block content %}
 <div class="home-content" style=" margin-left: 6%;  width: 90%;">
+
+  <div class="add" align="right">
+    <a href="{%url 'add_product' %}">
+      <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
+    </a>
+  </div>
+  <br>
+
   <table class="table">
     <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
+        <th scope="col" width="12%">วันที่เพิ่มสินค้า</th>
         <th scope="col" width="10%">รหัสสินค้า</th>
         <th scope="col" width="10%">ชื่อสินค้า</th>
-        <th scope="col" width="10%">ราคา</th>
-        <th scope="col" width="10%">ต้นทุน</th>
-        <th scope="col" width="10%">จำนวนสินค้า</th>
-        <th scope="col" width="10%">วันหมดอายุ</th>
-        <th scope="col" width="10%">สถานะคลังสินค้า</th>
-        <th scope="col" width="3%">แก้ไข</th>
-        <th scope="col" width="3%">ลบ</th>
+        <th scope="col" width="5%" style="text-align: center;">ราคา</th>
+        <th scope="col" width="5%" style="text-align: center;">ต้นทุน</th>
+        <th scope="col" width="7%" style="text-align: center;">จำนวนสินค้า</th>
+        <th scope="col" width="10%" style="text-align: center;">วันหมดอายุ</th>
+        <th scope="col" width="10%" style="text-align: center;">สถานะคลังสินค้า</th>
+        <th scope="col" width="3%" style="text-align: center;">แก้ไข</th>
+        <th scope="col" width="3%" style="text-align: center;">ลบ</th>
 
       </tr>
     </thead>
@@ -55,15 +60,18 @@
       {% for products in product %}
       <tr>
         <td class="cart_product">
+          <p>{{products.created}}</p>
+        </td>
+        <td class="cart_product">
           <p>{{products.barcode}}</p>
         </td>
         <td class="cart_description">
           <p>{{products.name}}</p>
         </td>
-        <td class="cart_price">
+        <td class="cart_price text-center">
           <p>{{products.price}}</p>
         </td>
-        <td class="cart_cost">
+        <td class="cart_cost text-center">
           <p>{{products.cost}}</p>
         </td>
         {% if products.stock <= 0 %}
@@ -80,7 +88,7 @@
         </td>
         {%endif%}
 
-        <td class="cart_exp">
+        <td class="cart_exp text-center">
           <p>{{products.EXP}}</p>
         </td>
 

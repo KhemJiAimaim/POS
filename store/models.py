@@ -6,8 +6,8 @@ from django.utils import timezone
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255 , blank=True)
 
     class Meta:
         ordering = ['id'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
@@ -29,14 +29,14 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
-    image = models.ImageField(upload_to='product' , blank=True )
+    image = models.ImageField(upload_to='product' )
     barcode = models.CharField(max_length=255)
     EXP = models.DateField() #วันหมดอายุ
     created = models.DateTimeField(auto_now_add=True) #วัน-เวลาเพิ่มสินค้า
     updated = models.DateTimeField(auto_now = True) #วัน-เวลาที่แก้ไขสินค้า
 
     class Meta: 
-        ordering = ['name'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
+        ordering = ['stock'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
         verbose_name = 'คลังสินค้า'
         verbose_name_plural = 'ข้อมูลสินค้า'
 

@@ -5,7 +5,7 @@
 </style>
 
 {% block t %}
-    เพิ่มสินค้า
+    แก้ไขหมวดหมู่สินค้า
 {% endblock %}
 
 {% block nav %}
@@ -15,16 +15,16 @@
 
 <div class="home-content" style=" margin-left: 10%;  width: 80%;">
     {% if submitted %}
-		เพิ่มสินค้าสำเร็จ
+    แก้ไขหมวดหมู่สินค้าสำเร็จ
 	{% else %}
 
-		<form action="" method=POST enctype="multipart/form-data">
+		<form action="" method=POST >
 			{% csrf_token %}
-			
+
 			{{ form.as_p }}
 
             <div align="right">
-                <input type="submit" value="เพิ่มสินค้า" class="btn btn-success">
+                <input type="submit" value="บันทึกข้อมูล" class="btn btn-success">
             </div>
 		</form>
 	{% endif %}

@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import ProductForm 
+from .forms import ProductForm , CategoryForm
 
 
 # Create your views here.
@@ -154,7 +154,16 @@ def product(request , category_slug=None):
         product = Product.objects.filter(name__icontains=request.GET ['title']) | Product.objects.filter(barcode__icontains=request.GET ['title'])
     except Exception as e:
         pass
+
     
+    paginator = Paginator(product, 12)
+    page = request.GET.get('page')
+    try:
+        product = paginator.page(page)
+    except PageNotAnInteger:
+        product = paginator.page(1)
+    except EmptyPage:
+        product = paginator.page(paginator.num_pages)
     
 
     return render(request, 'product.html', {
@@ -198,7 +207,42 @@ def index(request):
 
 
 def category(request):
-    return render(request, 'category.html')
+    category = Category.objects.all().filter()
+    return render(request, 'category.html',{
+        'category' : category
+    })
+
+def add_category(request):
+    submitted = False
+    if request.method == "POST" :
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/category?submitted=True')
+    else:
+        form = CategoryForm
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'add_category.html', {'form':form ,'submitted':submitted})
+
+
+def deleteCategory (request , category_id):
+    category = Category.objects.get(id = category_id)
+    category.delete()
+    return redirect('category')
+
+def edit_category(request, category_id):
+    category = Category.objects.get(id = category_id) 
+    form = CategoryForm(request.POST or None, instance=category)
+    if form.is_valid():
+            form.save()
+            return redirect('category')
+    
+    return render(request, 'edit_category.html', {
+        'category': category,
+        'form':form
+    })
+
 
 
 

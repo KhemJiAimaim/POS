@@ -14,7 +14,7 @@
 {% block nav %}
 
 <div class="add" align="right">
-  <a href="{%url 'checkout_add'%}">
+  <a href="{%url 'add_category'%}">
     <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มหมวดหมู่">
   </a>
 </div>
@@ -22,36 +22,35 @@
 {% block content %}
 
 <div class="home-content">
-
-  <table class="table">
-    <thead class="thead-dark">
+ 
+  <table class="table" style=" margin-left: 6%;  width: 90%;">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">ชื่อหมวดหมู่</th>
-        <th scope="col">แก้ไข</th>
-        <th scope="col">ลบ</th>
+        <th scope="col" width="10%">#</th>
+        <th scope="col" width="15%">ชื่อหมวดหมู่</th>
+        <th scope="col" width="5%" style="text-align: center;">แก้ไข</th>
+        <th scope="col" width="5%" style="text-align: center;">ลบ</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody style="font-size: 18px; font-weight: bold;"> 
+      {% for categorys in category %}
       <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
+        <th> {{categorys.id}} </th>
+        <td>{{categorys.name}}</td>
+        <td class="cart_edit" style="text-align: center; ">
+          <a href="{%url 'edit_category' categorys.id  %}">
+            <i class='bx bx-edit text-dark'></i>
+          </a>
+        </td>
+        <td class="cart_del" style="text-align: center;">
+          <a href="{%url 'deleteCategory' categorys.id  %}">
+            <i class='bx bx-message-square-x text-danger'></i>
+          </a>
+        </td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
+  
 </div>
 {% endblock %}

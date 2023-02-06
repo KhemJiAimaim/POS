@@ -25,16 +25,18 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.pos , name="pos"),
+    path('index/', views.index , name="index"),
 
     path('product/', views.product, name="product"),
     path('add_product/', views.add_product, name="add_product"),
-    path('edit_product<int:product_id>', views.edit_product, name="edit_product"),
-    path('delete<int:product_id>', views.deleteProduct , name="deleteProduct"),
+    path('product/edit_product<int:product_id>', views.edit_product, name="edit_product"),
+    path('product/delete<int:product_id>', views.deleteProduct , name="deleteProduct"),
    
-    path('index/', views.index , name="index"),
-    
     path('category/', views.category, name="category"),
     path('category/<slug:category_slug>' , views.pos, name="product_by_category"),
+    path('add_category/', views.add_category, name="add_category"),
+    path('edit_category<int:category_id>', views.edit_category, name="edit_category"),
+    path('delete<int:category_id>', views.deleteCategory , name="deleteCategory"),
     
     path('cart/add/<int:product_id>', views.addCart , name="addCart"),
     path('cart/remove/<int:product_id>', views.removeCart , name="removeCart"),
