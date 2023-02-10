@@ -18,37 +18,50 @@
 {% endblock %}
 
 {% block nav %}
-<form class="form-inline ml-3" action="{% url 'product' %}" , method="GET">
-  <div class="input-group">
-    <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
-    <div class="input-group-append">
-      <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>--><i
-          class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-  </div>
-</form>
+
 
 {% endblock %}
 
 {% block content %}
 <div class="home-content" style=" margin-left: 6%;  width: 90%;">
-
-  <div class="add" align="right">
-    <a href="{%url 'add_product' %}">
-      <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
-    </a>
+  <div class="container--fluid">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        <form class="form-inline ml-5" action="{% url 'product' %}" , method="GET">
+          <div class="input-group">
+            <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>--><i
+                  class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-4 text-center">
+        <a href="{%url 'pdfProduct' %}">
+          <i class='bx bxs-file-pdf' style="font-size: 45px; color: #d80000;"></i>
+        </a>
+      </div>
+      <div class="col-lg-4 text-center" >
+        <a href="{%url 'add_product' %}">
+          <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
+        </a>
+      </div>
+    </div>
   </div>
+
+
   <br>
 
   <table class="table">
     <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
-        <th scope="col" width="12%">วันที่เพิ่มสินค้า</th>
-        <th scope="col" width="10%">รหัสสินค้า</th>
+        <th scope="col" width="13%" style="text-align: center;">วันที่เพิ่มสินค้า</th>
+        <th scope="col" width="5%" >รหัสสินค้า</th>
         <th scope="col" width="10%">ชื่อสินค้า</th>
-        <th scope="col" width="5%" style="text-align: center;">ราคา</th>
-        <th scope="col" width="5%" style="text-align: center;">ต้นทุน</th>
-        <th scope="col" width="7%" style="text-align: center;">จำนวนสินค้า</th>
+        <th scope="col" width="3%" style="text-align: center;">ราคา</th>
+        <th scope="col" width="3%" style="text-align: center;">ต้นทุน</th>
+        <th scope="col" width="10%" style="text-align: center;">จำนวนสินค้า</th>
         <th scope="col" width="10%" style="text-align: center;">วันหมดอายุ</th>
         <th scope="col" width="10%" style="text-align: center;">สถานะคลังสินค้า</th>
         <th scope="col" width="3%" style="text-align: center;">แก้ไข</th>
@@ -74,57 +87,64 @@
         <td class="cart_cost text-center">
           <p>{{products.cost}}</p>
         </td>
-        {% if products.stock <= 0 %}
-        <td class="cart_stock text-danger text-center">
+        {% if products.stock <= 0 %} <td class="cart_stock text-danger text-center">
           <p>{{products.stock}} ชิ้น</p>
-        </td>
-        {% elif products.stock <= 5 %}
-        <td class="cart_stock text-warning text-center">
-          <p>{{products.stock}} ชิ้น</p>
-        </td>
-        {% else %}
-        <td class="cart_stock  text-center">
-          <p>{{products.stock}} ชิ้น</p>
-        </td>
-        {%endif%}
-
-        <td class="cart_exp text-center">
-          <p>{{products.EXP}}</p>
-        </td>
-
-        {% if products.stock <= 0 %} <td class="cart_status">
-          <p class="text-center text-danger " style="font-size: 18px;">
-            สินค้าหมด
-          </p>
           </td>
-          {% elif products.stock <= 5 %} <td class="cart_status">
-            <p class="text-center text-warning" style="font-size: 18px;">
-              สินค้าใกล้หมด
-            </p>
+          {% elif products.stock <= 5 %} <td class="cart_stock text-warning text-center">
+            <p>{{products.stock}} ชิ้น</p>
             </td>
             {% else %}
-            <td class="cart_status">
-              <p class="text-center text-success" style="font-size: 18px;">
-                ยังมีสินค้า
-              </p>
+            <td class="cart_stock  text-center">
+              <p>{{products.stock}} ชิ้น</p>
             </td>
-
             {%endif%}
-            <td class="cart_edit" style="text-align: center; ">
-              <a href="{%url 'edit_product' products.id  %}">
-                <i class='bx bx-edit text-dark'></i>
-              </a>
+
+            {% if products.EXP == 0 %}
+            <td class="cart_exp text-center text-danger">
+              <p>{{products.EXP}}</p>
             </td>
-            <td class="cart_del" style="text-align: center;">
-              <a href="{%url 'deleteProduct' products.id  %}">
-                <i class='bx bx-message-square-x text-danger'></i>
-              </a>
+            {% else %}
+            <td class="cart_exp text-center">
+              <p>{{products.EXP}}</p>
             </td>
-            {% endfor %}
+            {%endif%}
+
+            {% if products.stock <= 0 %} <td class="cart_status">
+              <p class="text-center text-danger " style="font-size: 18px;">
+                สินค้าหมด
+              </p>
+              </td>
+              {% elif products.stock <= 5 %} <td class="cart_status">
+                <p class="text-center text-warning" style="font-size: 18px;">
+                  สินค้าใกล้หมด
+                </p>
+                </td>
+                {% else %}
+                <td class="cart_status">
+                  <p class="text-center" style="font-size: 18px;">
+                    ยังมีสินค้า
+                  </p>
+                </td>
+
+                {%endif%}
+                <td class="cart_edit" style="text-align: center; ">
+                  <a href="{%url 'edit_product' products.id  %}">
+                    <i class='bx bx-edit text-dark'></i>
+                  </a>
+                </td>
+                <td class="cart_del" style="text-align: center;">
+                  <a href="{%url 'deleteProduct' products.id  %}"
+                    onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')">
+                    <i class='bx bx-message-square-x text-danger'></i>
+                  </a>
+                </td>
+                {% endfor %}
+    </tbody>
+  </table>
 
 
 
-            <!--<div class="dropdown-divider "></div>
+  <!--<div class="dropdown-divider "></div>
             <ul class="pagination justify-content-end mr-2">
                 {% if product.has_previous %}
                 <li class="page-item"><a class="page-link " href="?page=product.previous_page_number">Previous</a></li>
@@ -140,4 +160,5 @@
                 {% endif %}
             </ul>-->
 </div>
+
 {% endblock%}

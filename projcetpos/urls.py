@@ -31,6 +31,7 @@ urlpatterns = [
     path('add_product/', views.add_product, name="add_product"),
     path('product/edit_product<int:product_id>', views.edit_product, name="edit_product"),
     path('product/delete<int:product_id>', views.deleteProduct , name="deleteProduct"),
+    path('pdf_product', views.pdfProduct , name="pdfProduct"),
    
     path('category/', views.category, name="category"),
     path('category/<slug:category_slug>' , views.pos, name="product_by_category"),

@@ -43,7 +43,7 @@
           </a>
         </td>
         <td class="cart_del" style="text-align: center;">
-          <a href="{%url 'deleteCategory' categorys.id  %}">
+          <a href="{%url 'deleteCategory' categorys.id  %}" onclick="return confirm('คุณต้องการลบหมวดหมู่สินค้าหรือไม่ ?')">
             <i class='bx bx-message-square-x text-danger'></i>
           </a>
         </td>

@@ -8,7 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import ProductForm , CategoryForm
-
+from datetime import date
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import StringIO, BytesIO
 
 # Create your views here.
 @login_required (login_url='signIn')
@@ -142,6 +145,7 @@ def ch(request):
 def product(request , category_slug=None):
     product = None
     category_page = None
+    today = date.today()
 
     if category_slug != None:
         category_page = get_object_or_404(Category, slug=category_slug)
@@ -151,7 +155,7 @@ def product(request , category_slug=None):
 
 
     try:
-        product = Product.objects.filter(name__icontains=request.GET ['title']) | Product.objects.filter(barcode__icontains=request.GET ['title'])
+        product = Product.objects.filter(name__icontains=request.GET ['title']) | Product.objects.filter(barcode__icontains=request.GET ['title']) 
     except Exception as e:
         pass
 
@@ -168,7 +172,8 @@ def product(request , category_slug=None):
 
     return render(request, 'product.html', {
         'product':  product,
-        'category': category_page
+        'category': category_page,
+        'today':today
     })
 
 def add_product(request):
@@ -200,6 +205,25 @@ def deleteProduct (request , product_id):
     product = Product.objects.get(id = product_id)
     product.delete()
     return redirect('product')
+
+def pdfProduct (request ):
+    product = Product.objects.all()
+
+    template_path = 'pdf_product.html'
+    context = {'product': product}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = ' filename="products_report.pdf"' #attachment; ดาวห์โหลดไฟล์
+    template = get_template(template_path)
+    html = template.render(context)
+    
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(html.encode("UTF-8") ,dest=response)
+    # if error then show some funy view 
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
 
 
 def index(request):
@@ -299,6 +323,8 @@ def removeCart(request, product_id):
 def deleteCart (request):
     cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
     cart.delete()
+
+    
     return redirect('/')
 
 def signInView(request):

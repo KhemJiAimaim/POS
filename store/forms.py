@@ -39,7 +39,7 @@ class ProductForm(ModelForm):
             'cost': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'ต้นทุนสินค้า'}),
             'stock': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'จำนวนสินค้า'}),
             'image': forms.FileInput(attrs={'class':'form-control', 'placeholder':''}),
-            'EXP': forms.TextInput(attrs={'class':'form-control', 'placeholder':'วัน/เดือน/ปี'}),
+            'EXP': forms.DateInput(attrs={'class':'form-control', 'placeholder':'วัน/เดือน/ปี'}),
         }
 
 
