@@ -13,6 +13,20 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import StringIO, BytesIO
 
+# Import PDF Stuff
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus import Table
+
+
+
 # Create your views here.
 @login_required (login_url='signIn')
 def pos(request, category_slug=None):
@@ -206,26 +220,28 @@ def deleteProduct (request , product_id):
     product.delete()
     return redirect('product')
 
-def pdfProduct (request ):
+
+def pdfProduct (template_src):
     product = Product.objects.all()
+    pdfmetrics.registerFont(TTFont('THSarabunNew', 'store/THSarabunNew.ttf' , 'utf-8'))
+    pdfmetrics.registerFont(TTFont('THSarabunNewB', 'store/THSarabunNew Bold.ttf' , 'utf-8'))
 
-    template_path = 'pdf_product.html'
-    context = {'product': product}
+    pdf = canvas.Canvas("mypdf.pdf", pagesize=A4)
+
+    pdf.setFont("THSarabunNewB",30)
+    pdf.setTitle("Product Report")
+   
+    pdf.drawCentredString(300,770,"รายการสินค้า")
+   
+    data = []
+
+    pdf.save()
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = ' filename="products_report.pdf"' #attachment; ดาวห์โหลดไฟล์
-    template = get_template(template_path)
-    html = template.render(context)
-    
-
-    # create a pdf
-    pisa_status = pisa.CreatePDF(html.encode("UTF-8") ,dest=response)
-    # if error then show some funy view 
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    response['Content-Disposition'] =  'filename="products_report.pdf"' #attachment; ดาวห์โหลดไฟล์
+    with open('mypdf.pdf' , 'rb') as f :
+        response.write(f.read())
     return response
-
-
-
 def index(request):
     return render(request, 'index.html')
 

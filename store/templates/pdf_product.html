@@ -1,39 +1,70 @@
 {% load static %}
 
-<!doctype html>
 <html lang="th">
   <head>
     <!-- Required meta tags -->
     <meta charset=UFT-8>
     <meta http-equiv="Content-Language" content="th">
     <meta http-equiv="Content-Type" content="text/html;">
-    
-  
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
-    <title>Product Report</title>
+
+    <style>
+        @font-face {
+        font-family: "THSarabunNew";
+        src: url(store\THSarabunNew.ttf);
+        }
+
+        body {
+            font-weight: 200;
+            font-size: 18px;
+            font-family: "THSarabunNew";
+        }
+    </style>
+
+    <title>Product Report</title> 
+ 
+
   </head>
 
-  <style type="text/css">
-
-    @font-face {
-    font-family: "THSarabunNew";
-    src: url("/static/font/THSarabunNew.ttf");
-    }
-
-    body {
-        font-weight: 200;
-        font-size: 18px;
-        font-family: "THSarabunNew";
-    }
-</style>
-
+ 
   <body>
     <div class="container--fluid">
         <h1>khemjira</h1>
         <h1>เขมจิรา</h1>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+
     <!--<table class="table">
         <thead class="thead" style="font-size: 20px; font-weight: bold; ">
             <tr>
