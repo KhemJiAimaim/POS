@@ -37,13 +37,11 @@
                 <span style="font-size: 35px;">บาท</strong>
             </div>
     </center> 
-    <form action=" " method="POST">
         {% csrf_token %}
         <div align="center">
-            <a>
+            <a href="{%url 'pos' %}">
                 <input type="submit" class="btn btn-success mb-2 mr-2" value="เรียบร้อย">
             </a>
         </div>
-    </form>
 </div>
 {% endblock %}
