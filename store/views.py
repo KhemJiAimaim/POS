@@ -494,13 +494,9 @@ def payOffDebtor(request, debtor_id):
             return render(request , 'debtor_payoff.html' ,  {"total" : debtor.total , "statusFail" : True})
         else:
             debtor.total = debtor.total - money
-            if debtor.total != 0:
-                debtor.balance = money
-                debtor.save()
-                return render(request, 'debtor_payoff.html', {"total": debtor.total, "statusSuccess": True}) 
-            else:
-                debtor.delete()
-                return render(request, 'debtor_payoff.html', {"total": debtor.total, "statusSuccess": True}) 
+            debtor.balance = money
+            debtor.save()
+            return render(request, 'debtor_payoff.html', {"total": debtor.total, "statusSuccess": True}) 
     else: 
         print("========== PAYOFF-GET============")
         return render(request,'debtor_payoff.html' , {"total" : debtor.total})
