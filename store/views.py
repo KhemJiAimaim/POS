@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Category, Product, Cart, CartItem, Order, OrderItem
+from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate, logout
@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import ProductForm, CategoryForm
+from .forms import ProductForm, CategoryForm , DebtorForm
 from datetime import date
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -23,9 +23,9 @@ def pos(request, category_slug=None):
 
     if category_slug != None:
         category_page = get_object_or_404(Category, slug=category_slug)
-        product = Product.objects.all().filter(category=category_page)
+        product = Product.objects.all().filter(category=category_page , active = True)
     else:
-        product = Product.objects.all().filter()
+        product = Product.objects.all().filter(active = True)
 
     total = 0  # ยอดชำระ
     cost = 0  # ยอดต้นทุน
@@ -151,9 +151,9 @@ def product(request, category_slug=None):
 
     if category_slug != None:
         category_page = get_object_or_404(Category, slug=category_slug)
-        product = Product.objects.all().filter(category=category_page)
+        product = Product.objects.all().filter(category=category_page  , active = True)
     else:
-        product = Product.objects.all().filter()
+        product = Product.objects.all().filter(active = True)
 
     try:
         product = Product.objects.filter(name__icontains=request.GET['title']) | Product.objects.filter(
@@ -314,6 +314,39 @@ def addCart(request, product_id):
     return redirect('/')
 
 
+def addCartSearch(request):
+    if request.method == "POST":
+        barcodesearch = request.POST.get('barcodesearch')
+        # มันส่งจะไอดีมาจากนั้น ไอดีจะเป็นตังดึงสินค้าออกมาตามรหัส
+        product = Product.objects.get(barcode=barcodesearch)
+        if product.stock != 0:
+            # สร้างตะกร้าสินค้า
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+            except Cart.DoesNotExist:
+                cart = Cart.objects.create(cart_id=_cart_id(request))
+                cart.save()
+                # บันทึกเข้าฐานข้อมูล
+
+            try:
+
+                # ซื้อรายการสินค้าซ้ำ
+                cart_item = CartItem.objects.get(product=product, cart=cart, )
+                if cart_item.quantity < cart_item.product.stock:
+                    # เปลี่ยนจำนวนรายการสินค้า
+                    cart_item.quantity += 1
+                    # บันทึก / อัพเดทค่า
+                    cart_item.save()
+            except CartItem.DoesNotExist:
+                # ซื้อรายการสินค้าครั้งแรก
+                cart_item = CartItem.objects.create(
+                    product=product,
+                    cart=cart,
+                    quantity=1
+                )
+                cart_item.save()
+    return redirect('/')
+
 def removeCart(request, product_id):
     # ทำงานกับตะกร้าสินค้า
     cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
@@ -353,3 +386,122 @@ def signInView(request):
 def signOutView(request):
     logout(request)
     return redirect('signIn')
+
+
+
+def debtor(request):
+    return render(request, 'debtor.html')
+
+
+def debtorCaseNew(request):
+    submitted = False
+    if request.method == "POST":
+        counter = 0
+        cost = 0
+        print("===============POST==============")
+        form = DebtorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
+            cart_items = CartItem.objects.filter(
+            cart=cart, active=True)  # ดึงข้อมูลสินต้าในตะกร้า
+            for item in cart_items:
+                cost += (item.product.cost*item.quantity)
+                counter += item.quantity
+            profit = 0
+            money = 0
+            total = 0
+            amount = 0
+            order = Order.objects.create(
+                money=money,
+                total=total,
+                cost=cost,
+                profit=profit,
+                quantity=counter,
+                amount = amount
+            )
+            order.save()
+            # บันทึกรายการสั่งซื้อ
+            for item in cart_items:
+                order_item = OrderItem.objects.create(
+                product=item.product.name,
+                quantity=item.quantity,
+                price=item.product.price,
+                order=order
+                )
+                order_item.save()
+                # ลดจำนวน Stock
+                product = Product.objects.get(id=item.product.id)
+                product.stock = int(item.product.stock-order_item.quantity)
+                product.save()
+                item.delete()
+            submitted = True
+            return render(request , 'debtor_new.html' , {'submitted':submitted})
+    else:
+        form = DebtorForm
+        return render(request, 'debtor_new.html' , {'form': form , 'submitted':submitted})
+
+def debtorCaseOld(request):
+    debtors = Debtor.objects.all()
+    return render(request , 'debtor_old.html' , {'debtors': debtors})
+
+def debtorCaseOldEdit(request , debtor_id):
+    debtor = Debtor.objects.get(id=debtor_id)
+    form = DebtorForm(request.POST or None, instance=debtor)
+    if form.is_valid():
+        form.save()
+        return redirect('debtor_old')
+
+    return render(request, 'edit_debtor.html', {
+        'debtor': debtor,
+        'form': form
+    })
+
+def deleteDebtorCaseOld(request, debtor_id):
+    debtor = Debtor.objects.get(id=debtor_id)
+    debtor.delete()
+    return redirect('debtor_old')
+
+
+def plusDebtor(request, debtor_id):
+    debtor = Debtor.objects.get(id=debtor_id)
+    if request.method == 'POST':
+        print("========== PLUS-POST===========")
+        data = request.POST.copy()
+        money = int(data.get('amount'))
+        balance = int(float(data.get('balance')))
+        if money > balance :
+            return render(request , 'debtor_plus.html' ,  {"balance" : debtor.balance , "statusFail" : True})
+        else:
+            debtor.balance = debtor.balance - money
+            debtor.total = debtor.total + money
+            debtor.save()
+            return render(request, 'debtor_plus.html', {"balance": debtor.balance, "statusSuccess": True}) 
+    else: 
+        print("========== PLUS-GET============")
+        return render(request,'debtor_plus.html' , {"balance" : debtor.balance})
+    
+
+
+def payOffDebtor(request, debtor_id):
+    debtor = Debtor.objects.get(id=debtor_id)
+    if request.method == 'POST':
+        print("========== PAYOFF-POST===========")
+        data = request.POST.copy()
+        money = int(data.get('amount'))
+        total = int(float(data.get('total')))
+        if money > total :
+            return render(request , 'debtor_payoff.html' ,  {"total" : debtor.total , "statusFail" : True})
+        else:
+            debtor.total = debtor.total - money
+            if debtor.total != 0:
+                debtor.balance = money
+                debtor.save()
+                return render(request, 'debtor_payoff.html', {"total": debtor.total, "statusSuccess": True}) 
+            else:
+                debtor.delete()
+                return render(request, 'debtor_payoff.html', {"total": debtor.total, "statusSuccess": True}) 
+    else: 
+        print("========== PAYOFF-GET============")
+        return render(request,'debtor_payoff.html' , {"total" : debtor.total})
+

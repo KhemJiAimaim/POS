@@ -1,0 +1,67 @@
+{% extends "layouts/layouts.html" %}
+{% block title %} Phacharamon Shop {% endblock %}
+{% load humanize %}
+{% load static %}
+<style>
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: #ffffff;
+    opacity: 1;
+  }
+
+  .form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #e9e9e9;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #155724;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  }
+</style>
+{% block content %}
+
+<div class="container">
+    <center>
+      <div class="mb-4">
+        {% if statusFail %}
+        <h2 style="color: red;"> จำนวนเงินเยอะเกินจำนวนที่ติดหนี้</h2>
+        {% elif statusSuccess %}
+        <h2 style="color: green;"> ชำระหนี้เสร็จสิ้น จำนวนยอดหนี้คงเหลือ {{total}}</h2>
+        {% else %}
+        <form method="post">
+            {% csrf_token %}
+                <br><label>
+                        <h1>ยอดหนี้ค้างชำระ</h1>
+                        </label><br>
+                        <input type="number" style="font-size: 2rem;" value="{{total | intcomma}}" name="total" required disabled>
+                        <span style="font-size: 35px;">บาท</strong>
+                    </div>
+
+                    <div class="mb-4">
+                        <label>
+                        <h1>ยอดเงินที่ต้องการชำระ</h1>
+                        </label><br>
+                        <input type="number" style="font-size: 2rem;" value=" " name="amount">
+                        <span style="font-size: 35px;">บาท</strong>
+                    </div>
+
+                    </center>
+                    <input type="hidden" name="total" value="{{total}}">
+                    <div align="right"><br>
+                        <input type="submit" class="btn btn-success mb-2 ml-2" value="ยืนยัน">
+                    </div>
+
+                </form>
+        {% endif %}
+        <a href="{%url 'debtor_old' %}">
+            <input type="submit" class="btn btn-primary mb-2 mr-2" value="กลับหน้าลูกหนี้">
+        </a>
+</div>
+{% endblock %}

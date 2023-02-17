@@ -1,0 +1,119 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load static %}
+
+<style>
+  .table {
+    width: 80%;
+    margin-bottom: 1rem;
+    color: #000000;
+    margin-left: 10%;
+  }
+</style>
+
+{% block t %}
+<a href="{% url 'product' %}" style="text-decoration: none; color: rgb(0, 0, 0); ">
+  รายชื่อผู้ติดหนี้ทั้งหมด
+</a>
+{% endblock %}
+
+{% block nav %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="home-content" style=" margin-left: 6%;  width: 90%;">
+  <div class="container--fluid">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        <form class="form-inline ml-5" action="{% url 'product' %}" , method="GET">
+          <div class="input-group">
+            <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>--><i
+                  class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-4 text-center" >
+        <a href="{%url 'debtor_new' %}">
+          <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มลูกหนี้">
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <br>
+
+  <table class="table">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
+      <tr>
+        <th scope="col" width="13%" style="text-align: center;">ชื่อจริง-นามสกุล</th>
+        <th scope="col" width="5%" >เบอร์โทรศัพท์</th>
+        <th scope="col" width="3%" style="text-align: center;">ยอดหนี้</th>
+        <th scope="col" width="3%" style="text-align: center;">วงเงิน</th>
+        <th scope="col" width="10%" style="text-align: center;">วงเงินคงเหลือ</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่สร้าง</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่อัพเดตล่าสุด</th>
+        <th scope="col" width="3%" style="text-align: center;">ชำระหนี้</th>
+        <th scope="col" width="3%" style="text-align: center;">ติดหนี้เพิ่ม</th>
+        <th scope="col" width="3%" style="text-align: center;">แก้ไข</th>
+        <th scope="col" width="3%" style="text-align: center;">ลบ</th>
+      </tr>
+    </thead>
+    <tbody style="font-size: 18px; font-weight: bold;">
+      {% for debtor in debtors %}
+      <tr>
+        <td class="cart_product">
+          <p>{{debtor.name}}</p>
+        </td>
+        <td class="cart_product">
+          <p>{{debtor.phone}}</p>
+        </td>
+        <td class="cart_description">
+          <p>{{debtor.total}}</p>
+        </td>
+        <td class="cart_price text-center">
+          <p>{{debtor.cash_limit}}</p>
+        </td>
+        <td class="cart_cost text-center">
+          <p>{{debtor.balance}}</p>
+        </td>
+        <td class="cart_cost text-center">
+            <p>{{debtor.created_at}}</p>
+          </td>
+          <td class="cart_cost text-center">
+            <p>{{debtor.updated_at}}</p>
+          </td>
+          <td class="debtor_payoff" style="text-align: center; ">
+            <a href="{%url 'payOffDebtor' debtor.id  %}">
+              <i class='bx bx-wallet text-dark'></i>
+            </a>
+          </td>
+          <td class="cart_edit" style="text-align: center; ">
+            <a href="{%url 'plusDebtor' debtor.id  %}">
+              <i class='bx bx-plus text-dark'></i>
+            </a>
+          </td>
+
+                <td class="cart_edit" style="text-align: center; ">
+                  <a href="{%url 'editDebtor' debtor.id  %}">
+                    <i class='bx bx-edit text-dark'></i>
+                  </a>
+                </td>
+                <td class="cart_del" style="text-align: center;">
+                  <a href="{%url 'deleteDebtor' debtor.id  %}"
+                    onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')">
+                    <i class='bx bx-message-square-x text-danger'></i>
+                  </a>
+                </td>
+                {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock%}

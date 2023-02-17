@@ -32,6 +32,7 @@ class Product(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     image = models.ImageField(upload_to='product')
+    active = models.BooleanField(default=False)
     barcode = models.CharField(max_length=255)
     EXP = models.DateField()  # วันหมดอายุ
     created = models.DateTimeField(auto_now_add=True)  # วัน-เวลาเพิ่มสินค้า
@@ -130,3 +131,28 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product
+
+
+class Debtor(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.TextField()
+    total = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True)  # ราคาสินค้า
+    balance = models.DecimalField(max_digits=10 , decimal_places=2 , null=True) # วงเงินคงเหลิอ
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    cash_limit = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.balance = self.cash_limit - self.total 
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'Debtor'
+        ordering = ['updated_at']
+        verbose_name = 'ลูกหนี้'
+        verbose_name_plural = 'ข้อมูลลูกหนี้'
+

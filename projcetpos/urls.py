@@ -40,6 +40,7 @@ urlpatterns = [
     path('delete<int:category_id>', views.deleteCategory , name="deleteCategory"),
     
     path('cart/add/<int:product_id>', views.addCart , name="addCart"),
+    path('cart/add', views.addCartSearch , name="addCartSe"),
     path('cart/remove/<int:product_id>', views.removeCart , name="removeCart"),
     path('cart/delete', views.deleteCart , name="deleteCart"),
     
@@ -48,6 +49,13 @@ urlpatterns = [
     
     path('checkout_add/',views.checkout_add,name='checkout_add'),
     path('ch/',views.ch,name="ch"),
+    path('debtor/', views.debtor , name="debtor"),
+    path('debtor_new/', views.debtorCaseNew , name="debtor_new"),
+    path('debtor_old/', views.debtorCaseOld , name="debtor_old"),
+    path('debtor_old/delete<int:debtor_id>', views.deleteDebtorCaseOld , name="deleteDebtor"),
+    path('debtor_old/edit_debtor<int:debtor_id>', views.debtorCaseOldEdit, name="editDebtor"),
+    path('debtor_old/debtor_plus<int:debtor_id>', views.plusDebtor, name="plusDebtor"),
+    path('debtor_payoff/debtor_payoff<int:debtor_id>', views.payOffDebtor, name="payOffDebtor"),
 ]
 
 if settings.DEBUG :

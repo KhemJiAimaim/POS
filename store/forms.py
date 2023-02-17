@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import Product , Category
+from .models import Product , Category , Debtor
 
 class CategoryForm(ModelForm):
     class Meta:
@@ -40,6 +40,23 @@ class ProductForm(ModelForm):
             'stock': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'จำนวนสินค้า'}),
             'image': forms.FileInput(attrs={'class':'form-control', 'placeholder':''}),
             'EXP': forms.DateInput(attrs={'class':'form-control', 'placeholder':'วัน/เดือน/ปี'}),
+        }
+
+class DebtorForm(ModelForm):
+    class Meta:
+        model = Debtor
+        fields = ('name','phone','total','cash_limit')
+        labels = {
+            'name':'ชื่อจริง นามสกุล',
+            'phone':'เบอร์โทรศัพท์',
+            'total':'ยอดหนี้ทั้งหมด',
+            'cash_limit':'วงเงิน',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ชื่อจริง นามสกุล'}),
+            'phone': forms.TextInput(attrs={'class':'form-control', 'placeholder':'เบอ์โทรศัพท์'}),
+            'total': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'ยอดหนี้'}),
+            'cash_limit': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'กำหนดวงเงิน'}),
         }
 
 
