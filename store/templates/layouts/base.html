@@ -34,7 +34,7 @@
 
   <div class="sidebar">
     <div class="logo-details">
-      <i class='bx bx-store'></i>
+      <a href="{% url 'index' %}"><i class='bx bx-store'></i></a>
       <span class="logo_name">Phacharamon Shop</span>
     </div>
     <ul class="nav-links">
@@ -63,13 +63,13 @@
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="{% url 'reportSale' %}">
           <i class='bx bx-list-ul'></i>
-          <span class="links_name">รายงานการซื้อสินค้า</span>
+          <span class="links_name">รายงานการขายสินค้า</span>
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="{% url 'debtor_old' %}">
           <i class='bx bx-pie-chart-alt-2'></i>
           <span class="links_name">ลูกหนี้</span>
         </a>

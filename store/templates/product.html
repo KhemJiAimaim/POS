@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block nav %}
-
+วันที่ : {{formatDate}}
 
 {% endblock %}
 
@@ -31,13 +31,13 @@
           <div class="input-group">
             <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
             <div class="input-group-append">
-              <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>--><i
-                  class="fa-solid fa-magnifying-glass"></i></button>
+              <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>-->
+                <i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
           </div>
         </form>
       </div>
-      <div class="col-lg-4 text-center">
+      <div class="col-lg-4 text-center" title="รายงานสินค้าใกล้หมด">
         <a href="{%url 'pdfProduct' %}">
           <i class='bx bxs-file-pdf' style="font-size: 45px; color: #d80000;"></i>
         </a>
@@ -56,7 +56,8 @@
   <table class="table">
     <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
-        <th scope="col" width="13%" style="text-align: center;">วันที่เพิ่มสินค้า</th>
+        <th scope="col" width="1%" style="text-align: center;">สถานะ</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่เพิ่มสินค้า</th>
         <th scope="col" width="5%" >รหัสสินค้า</th>
         <th scope="col" width="10%">ชื่อสินค้า</th>
         <th scope="col" width="3%" style="text-align: center;">ราคา</th>
@@ -72,8 +73,15 @@
     <tbody style="font-size: 18px; font-weight: bold;">
       {% for products in product %}
       <tr>
-        <td class="cart_product">
-          <p>{{products.created}}</p>
+        <td class="px-2 py-1 text-center">
+          {% if products.active == 1 %}
+          <span class="badge bg-success rounded-pill text-white px-3">แสดงสินค้า</span> 
+          {% else %}
+          <span class="badge bg-primary rounded-pill text-white px-3">ไม่แสดงสินค้า</span> 
+          {% endif %}
+      </td>
+        <td class="cart_product  text-center">
+          <p>{{products.created | date:'d/m/Y'}}</p>
         </td>
         <td class="cart_product">
           <p>{{products.barcode}}</p>
@@ -99,15 +107,11 @@
             </td>
             {%endif%}
 
-            {% if products.EXP == 0 %}
-            <td class="cart_exp text-center text-danger">
-              <p>{{products.EXP}}</p>
-            </td>
-            {% else %}
+            
             <td class="cart_exp text-center">
-              <p>{{products.EXP}}</p>
+              <p>{{products.EXP | date:'d/m/Y'}}</p>
             </td>
-            {%endif%}
+            
 
             {% if products.stock <= 0 %} <td class="cart_status">
               <p class="text-center text-danger " style="font-size: 18px;">

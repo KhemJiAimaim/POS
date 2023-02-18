@@ -17,7 +17,6 @@ django-bootstrap4==22.3
 django-cors-headers==3.13.0
 django-crispy-forms==1.14.0
 django-favicon==0.1.4
-django-xhtml2pdf==0.0.4
 djangorestframework==3.14.0
 dnspython==2.2.1
 env==0.1.0

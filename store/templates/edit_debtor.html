@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+<style>
+
+</style>
+
+{% block t %}
+    แก้ไขข้อมูลข้อมูลลูกค้าที่ติดหนี้
+{% endblock %}
+
+{% block nav %}
+
+{% endblock %}
+{% block content %}
+
+<div class="home-content" style=" margin-left: 10%;  width: 80%;">
+    {% if submitted %}
+	แก้ไขข้อมูลข้อมูลลูกค้าที่ติดหนี้สำเร็จ
+	{% else %}
+
+		<form action="" method=POST >
+			{% csrf_token %}
+
+			{{ form.as_p }}
+
+            <div align="right">
+                <input type="submit" value="บันทึกข้อมูล" class="btn btn-success">
+            </div>
+		</form>
+	{% endif %}
+</div>
+{% endblock %}

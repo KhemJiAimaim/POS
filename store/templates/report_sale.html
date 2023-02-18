@@ -1,0 +1,87 @@
+{% extends "layouts/base.html" %}
+
+<style>
+  .home-section .home-content {
+    position: relative;
+    padding-top: 50px;
+  }
+</style>
+
+{% block t %}
+รายงานการขายสินค้า
+{% endblock %}
+
+{% block nav %}
+
+<div class="add" align="right">
+  <form class="form-inline ml-5" action="{% url 'product' %}" , method="GET">
+    <div class="input-group">
+      <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>-->
+          <i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% block content %}
+
+<div class="home-content">
+ 
+  <table class="table" style=" margin-left: 6%;  width: 90%;">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
+      <tr>
+        <th scope="col" width="5%"style="text-align: center;">วันที่ซื้อ</th>
+        <th scope="col" width="5%"style="text-align: center;">เวลา</th>
+        <th scope="col" width="5%"style="text-align: center;">ราคารวม</th>
+        <th scope="col" width="5%" style="text-align: center;">จำนวน</th>
+        <th scope="col" width="5%" style="text-align: center;">รับเงิน</th>
+        <th scope="col" width="5%" style="text-align: center;">เงินทอน</th>
+        <th scope="col" width="5%" style="text-align: center;">กำไร</th>
+        <th scope="col" width="3%" style="text-align: center;">ดูข้อมูล</th>
+        <th scope="col" width="5%" style="text-align: center;">ลบ</th>
+      
+      </tr>
+    </thead>
+    <tbody style="font-size: 18px; font-weight: bold; text-align: center;"> 
+      {% for order in orders %}
+      <tr>
+        <td class="created">
+          <p>{{order.created | date:'d/m/Y'}}</p>
+        </td>
+        <td class="created">
+          <p>{{order.created | date:'h:i'}} น.</p>
+        </td>
+        <td class="total">
+          <p>{{order.total}} บาท</p>
+        </td>
+        <td class="quantity">
+          <p>{{order.quantity}} ชิ้น</p>
+        </td>
+        <td class="money">
+          <p>{{order.money}} บาท</p>
+        </td>
+        <td class="amount">
+          <p>{{order.amount}} บาท</p>
+        </td>
+        <td class="profit">
+          <p>{{order.profit}} บาท</p>
+        </td>
+        <td class="data">
+          <a href="{%url 'orderItem' order.id  %}">
+          <span class="badge bg-success rounded-pill text-white px-3">ดู</span>
+          </a>
+        </td>
+        <td class="del" style="text-align: center;">
+          <a href="{%url 'deleteReportSale' order.id  %}" onclick="return confirm('คุณต้องการลบหมวดหมู่สินค้าหรือไม่ ?')">
+            <i class='bx bx-message-square-x text-danger'></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+</div>
+{% endblock %}

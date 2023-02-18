@@ -28,20 +28,15 @@
 {% block content %}
 <div class="container">
     <center>
-       
-            <div class="mb-4">
-                <br><label>
-                    <h1>เงินทอน</h1>
-                </label><br>
-                <input type="text" style="font-size: 2rem;" value="{{amount | intcomma}}" required disabled>
-                <span style="font-size: 35px;">บาท</strong>
-            </div>
-    </center> 
-        {% csrf_token %}
         <div align="center">
-            <a href="{%url 'pos' %}">
-                <input type="submit" class="btn btn-success mb-2 mr-2" value="เรียบร้อย">
+            <a href="{%url 'debtor_new' %}">
+                <input type="submit" class="btn btn-success mb-2 mr-2" value="ลูกหนี้ใหม่">
+            </a>
+            <a href="{%url 'debtor_old' %}">
+                <input type="submit" class="btn btn-danger mb-2 mr-2" value="ลูกหนี้เก่า">
             </a>
         </div>
+        </div>
+    </center> 
 </div>
 {% endblock %}

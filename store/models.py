@@ -30,13 +30,14 @@ class Product(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     image = models.ImageField(upload_to='product' )
+    active = models.IntegerField(default=1)
     barcode = models.CharField(max_length=255)
     EXP = models.DateField() #วันหมดอายุ
     created = models.DateTimeField(auto_now_add=True) #วัน-เวลาเพิ่มสินค้า
     updated = models.DateTimeField(auto_now = True) #วัน-เวลาที่แก้ไขสินค้า
 
     class Meta: 
-        ordering = ['stock'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
+        ordering = ['EXP','stock'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
         verbose_name = 'คลังสินค้า'
         verbose_name_plural = 'ข้อมูลสินค้า'
 
@@ -97,7 +98,7 @@ class Order(models.Model):
 
     class Meta :
         db_table='Order'
-        ordering=('created',)
+        ordering=('-created',)
         verbose_name = 'การซื้อสินค้า'
         verbose_name_plural = 'ข้อมูลการซื้อสินค้า'
 
@@ -106,6 +107,7 @@ class OrderItem(models.Model):
     product=models.CharField(max_length=250)
     quantity=models.IntegerField()
     price=models.DecimalField(max_digits=10,decimal_places=2)
+    cost = models.FloatField() #ต้นทุนของสินค้า
     order=models.ForeignKey(Order,on_delete=models.CASCADE ,null=True)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
@@ -123,3 +125,25 @@ class OrderItem(models.Model):
     def __str__(self):
         return self.product
         
+
+class Debtor(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.TextField()
+    total = models.DecimalField(max_digits=10, decimal_places=2, null=True)  # ยอดหนี้
+    balance = models.DecimalField(max_digits=10 , decimal_places=2 , null=True) # วงเงินคงเหลิอ
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    cash_limit = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.balance = self.cash_limit - self.total 
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'Debtor'
+        ordering = ['updated_at']
+        verbose_name = 'ลูกหนี้'
+        verbose_name_plural = 'ข้อมูลลูกหนี้'

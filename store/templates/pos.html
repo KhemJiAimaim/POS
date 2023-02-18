@@ -78,7 +78,9 @@
         <div class="box-footer bg-light">
             <div class="dropdown-divider "></div>
             <div align="right">
-                <input type="submit" class="btn btn-danger mb-2 ml-2" value="ลูกหนี้">
+                <a href="{%url 'debtor'%}">
+                    <input type="submit" class="btn btn-danger mb-2 ml-2" value="ลูกหนี้">
+                </a>
                 <a href="{%url 'checkout_add'%}">
                     <input type="submit" class="btn btn-success mb-2 mr-2" value="ชำระเงิน">
                 </a>
@@ -106,23 +108,19 @@
             </div>
 
             <div class="col-lg-3">
-                {% for products in product %}
-                <form class="form-inline ml-3" action="{%url 'addCart' products.id %}", method="GET">
-                    {% if products.stock <= 0 %}
-                        
-                    {% else %}
-
-                    {% endif %}
-                {% endfor %}
                     <div class="input-group">
-                        <input class="form-control" name="title" type="text" placeholder="รหัสสินค้า">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa fa-barcode px-1 fa-1x"></i>
-                            </button>
+                            <form action="{% url 'addCartSe' %}" method="POST">
+                                {% csrf_token %}
+                                    <div class="input-group-append">
+                                        <input class="form-control"  type="text" placeholder="รหัสสินค้า" name="barcodesearch">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fa fa-barcode px-1 fa-1x"></i>
+                                        </button>
+                                    </div>
+                            </form>
                         </div>
                     </div>
-                </form>
             </div>
 
             <div class="col-lg-4">

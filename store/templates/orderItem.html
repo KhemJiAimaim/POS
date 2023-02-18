@@ -1,0 +1,53 @@
+{% extends "layouts/base.html" %}
+
+<style>
+  .home-section .home-content {
+    position: relative;
+    padding-top: 50px;
+  }
+</style>
+
+{% block t %}
+รายงานการขายสินค้า
+{% endblock %}
+
+{% block nav %}
+วันที่ : {{formatDate}}
+{% endblock %}
+
+{% block content %}
+
+<div class="home-content">
+ 
+  <table class="table" style=" margin-left: 6%;  width: 90%;">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
+      <tr>
+        <th scope="col" width="5%"style="text-align: center;">ชื่อสินค้า</th>
+        <th scope="col" width="5%"style="text-align: center;">จำนวน</th>
+        <th scope="col" width="5%" style="text-align: center;">ราคา</th>
+        <th scope="col" width="5%" style="text-align: center;">ต้นทุน</th>
+      
+      </tr>
+    </thead>
+    <tbody style="font-size: 18px; font-weight: bold; text-align: center;"> 
+      {% for item in orderItem %}
+      <tr>
+        <td class="cart_product">
+          <p>{{item.product}}</p>
+        </td>
+        <td class="cart_product">
+          <p>{{item.quantity}} บาท</p>
+        </td>
+        <td class="cart_product">
+          <p>{{item.price}} ชิ้น</p>
+        </td>
+        <td class="cart_product">
+          <p>{{item.cost}} บาท</p>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+</div>
+{% endblock %}
