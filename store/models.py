@@ -115,7 +115,7 @@ class OrderItem(models.Model):
 
     class Meta :
         db_table='OrderItem'
-        ordering=('created',)
+        ordering=('-created',)
         verbose_name = 'รายการสินค้าที่ขาย'
         verbose_name_plural = 'ข้อมูลรายการสินค้าที่ขาย'
 

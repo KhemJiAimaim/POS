@@ -1,9 +1,11 @@
-from store.models import Category 
+from store.models import Category , OrderItem
 #from store.views import _cart_id
 
 def menu_links(request):
     links = Category.objects.all()
     return dict(links=links)
+
+
 
 #def counter(request):
 #    item_count = 0

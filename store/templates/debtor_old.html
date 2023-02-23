@@ -37,6 +37,9 @@
         </form>
       </div>
       <div class="col-lg-4 text-center" >
+        
+      </div>
+      <div class="col-lg-4 text-center" >
         <a href="{%url 'debtor_new' %}">
           <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มลูกหนี้">
         </a>
@@ -82,10 +85,10 @@
           <p>{{debtor.balance}}</p>
         </td>
         <td class="cart_cost text-center">
-            <p>{{debtor.created_at| date:'d/m/Y'}}</p>
+            <p>{{debtor.created_at| date:'d M Y'}}</p>
           </td>
           <td class="cart_cost text-center">
-            <p>{{debtor.updated_at| date:'d/m/Y'}}</p>
+            <p>{{debtor.updated_at| date:'d M Y'}}</p>
           </td>
           <td class="debtor_payoff" style="text-align: center; ">
             <a href="{%url 'payOffDebtor' debtor.id  %}">

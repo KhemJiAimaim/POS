@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor
 from django.urls import reverse
+from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login , authenticate,logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,11 +13,10 @@ from datetime import date, datetime
 from django.template.loader import get_template
 from io import StringIO, BytesIO
 from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 
 # Import PDF Stuff
 from django.http import FileResponse
-import io
-from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm , inch
 from reportlab.lib.pagesizes import A4 , letter
 from reportlab.pdfbase import pdfmetrics
@@ -630,19 +630,45 @@ def pdfProduct (datas):
     response.write(pdf)
     return response
 
-def reportSale(request):
-    orders = Order.objects.all().filter()
-    return render(request, 'report_sale.html',{'orders':orders})
+def reportSale(request, ):
+    currentdate = datetime.today()
+    formatDate = currentdate.strftime("%d-%m-%Y")
+    orders = Order.objects.all().filter().values()
+    return render(request, 'report_sale.html',
+    {'orders':orders,'formatDate':formatDate})
 
-def orderItem(request , order_id ):
-    orderItem = OrderItem.objects.get(id=order_id)
-    return redirect('orderItem')
+def detailOrderItem(request, order_id ):
+    currentdate = datetime.today()
+    formatDate = currentdate.strftime("%d-%m-%Y")
+    order = Order.objects.get(id=order_id)
+    orderitem=OrderItem.objects.filter(order=order)
+    return render(request, 'orderItem.html',
+    {'order':order,'formatDate':formatDate ,'orderitem':orderitem})
+
+
 
 def deleteReportSale(request, order_id):
     order = Order.objects.get(id=order_id)
     order.delete()
     return redirect('reportSale')
 
+
+def dateReport(request):
+    currentdate = datetime.today()
+    formatDate = currentdate.strftime("%d-%m-%Y")
+    if request.method == 'POST':
+        fd = request.POST['fromDate']
+        td = request.POST['toDate']
+        order = Order.objects.filter(Q(updated__gte=fd) & Q(updated__lte=td))
+        return render(request, 'between_date_report.html', locals())
+    return render(request, 'dateReport.html' ,{'formatDate':formatDate})
+
+def betweendateReport(request):
+    currentdate = datetime.today()
+    formatDate = currentdate.strftime("%d-%m-%Y")
+    orders = Order.objects.all().filter().values()
+    return render(request, 'between_date_report.html',
+    {'orders':orders,'formatDate':formatDate})
 
 
 
