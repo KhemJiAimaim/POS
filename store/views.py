@@ -8,7 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import ProductForm, CategoryForm , DebtorForm
+from .forms import ProductForm, CategoryForm , DebtorForm , OrderSearcForm
 from datetime import date, datetime
 from django.template.loader import get_template
 from io import StringIO, BytesIO
@@ -404,11 +404,11 @@ def debtorCaseNew(request):
             cart_items = CartItem.objects.filter(
             cart=cart, active=1)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
+                total += (item.product.price*item.quantity)
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity
                 profit = total-cost
                 money = 0
-                total += (item.product.price*item.quantity)
                 amount = 0
             order = Order.objects.create(
                 money=money,
@@ -498,8 +498,8 @@ def plusDebtor(request, debtor_id):
             for item in cart_items:
                 total += (item.product.price*item.quantity)
                 cost += (item.product.cost*item.quantity)
-                profit = total-cost
                 counter += item.quantity
+                profit = total-cost
                 money = 0
                 amount = 0
             order = Order.objects.create(
@@ -634,8 +634,28 @@ def reportSale(request, ):
     currentdate = datetime.today()
     formatDate = currentdate.strftime("%d-%m-%Y")
     orders = Order.objects.all().filter().values()
+    
+    total = 0
+    cost = 0
+    profit = 0
+    try: 
+        order = Order.objects.filter()
+        for item in order:
+                total += item.total
+                cost += item.cost
+                profit += item.total-item.cost
+                
+    except Exception as e:
+        pass
+
+        
     return render(request, 'report_sale.html',
-    {'orders':orders,'formatDate':formatDate})
+    {'orders':orders,
+    'formatDate':formatDate,
+    'total':total,
+    'cost':cost,
+    'profit':profit,
+    })
 
 def detailOrderItem(request, order_id ):
     currentdate = datetime.today()
@@ -656,19 +676,26 @@ def deleteReportSale(request, order_id):
 def dateReport(request):
     currentdate = datetime.today()
     formatDate = currentdate.strftime("%d-%m-%Y")
+    error = ""
+    total = 0
+    cost = 0
+    profit = 0
     if request.method == 'POST':
         fd = request.POST['fromDate']
         td = request.POST['toDate']
-        order = Order.objects.filter(Q(updated__gte=fd) & Q(updated__lte=td))
-        return render(request, 'between_date_report.html', locals())
-    return render(request, 'dateReport.html' ,{'formatDate':formatDate})
+        orders = Order.objects.filter(Q(created__gte=fd) & Q(created__lte=td))
+           
+        try: 
+            for item in orders:
+                    total += item.total
+                    cost += item.cost
+                    profit += item.total-item.cost
+                
+        except Exception as e:
+            pass
+        return render(request, 'between_date_report.html', locals() )
+    return render(request, 'dateReport.html', locals())
 
-def betweendateReport(request):
-    currentdate = datetime.today()
-    formatDate = currentdate.strftime("%d-%m-%Y")
-    orders = Order.objects.all().filter().values()
-    return render(request, 'between_date_report.html',
-    {'orders':orders,'formatDate':formatDate})
 
 
 

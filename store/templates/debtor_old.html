@@ -54,12 +54,12 @@
     <thead class="thead-dark" style="font-size: 18px; font-weight: bold; ">
       <tr>
         <th scope="col" width="10%" style="text-align: center;">ชื่อ</th>
-        <th scope="col" width="5%" style="text-align: center;">เบอร์โทรศัพท์</th>
+        <th scope="col" width="5%" style="text-align: center;">เบอร์โทร</th>
         <th scope="col" width="5%" style="text-align: center;">ยอดหนี้</th>
         <th scope="col" width="3%" style="text-align: center;">วงเงิน</th>
         <th scope="col" width="8%" style="text-align: center;">วงเงินคงเหลือ</th>
-        <th scope="col" width="8%" style="text-align: center;">วันที่สร้าง</th>
-        <th scope="col" width="8%" style="text-align: center;">วันที่อัพเดตล่าสุด</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่สร้าง</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่อัพเดตล่าสุด</th>
         <th scope="col" width="5%" style="text-align: center;">ชำระหนี้</th>
         <th scope="col" width="8%" style="text-align: center;">ติดหนี้เพิ่ม</th>
         <th scope="col" width="2%" style="text-align: center;">แก้ไข</th>
@@ -85,10 +85,10 @@
           <p>{{debtor.balance}}</p>
         </td>
         <td class="cart_cost text-center">
-            <p>{{debtor.created_at| date:'d M Y'}}</p>
+            <p>{{debtor.created_at| date:'d M Y H:i'}} น.</p>
           </td>
           <td class="cart_cost text-center">
-            <p>{{debtor.updated_at| date:'d M Y'}}</p>
+            <p>{{debtor.updated_at| date:'d M Y H:i' }} น.</p>
           </td>
           <td class="debtor_payoff" style="text-align: center; ">
             <a href="{%url 'payOffDebtor' debtor.id  %}">

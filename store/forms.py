@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from .models import Product , Category , Debtor
+from .models import Product , Category , Debtor , Order
 from django.contrib.admin.widgets import  AdminDateWidget, AdminTimeWidget, AdminSplitDateTime
 
 class CategoryForm(ModelForm):
@@ -65,7 +65,13 @@ class DebtorForm(ModelForm):
             'cash_limit': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'กำหนดวงเงิน'}),
         }
 
-
+class OrderSearcForm(ModelForm):
+    start_date = forms.DateTimeField(required=False) 
+    end_date = forms.DateTimeField(required=False)
+    class Meta:
+        model = Order
+        fields = ('start_date','end_date')
+   
 
 
         

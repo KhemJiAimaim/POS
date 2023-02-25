@@ -44,7 +44,7 @@ urlpatterns = [
     path('orderItem/detail/<int:order_id>', views.detailOrderItem , name="detailOrderItem"),
     path('deleteReportSale/<int:order_id>', views.deleteReportSale , name="deleteReportSale"),
     path('dateReport', views.dateReport , name="dateReport"),
-    path('betweendateReport', views.betweendateReport , name="betweendateReport"),
+    #path('betweendateReport', views.betweendateReport , name="betweendateReport"),
 
     path('cart/add/<int:product_id>', views.addCart , name="addCart"),
     path('cart/add', views.addCartSearch , name="addCartSe"),

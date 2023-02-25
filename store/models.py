@@ -103,6 +103,7 @@ class Order(models.Model):
         verbose_name_plural = 'ข้อมูลการซื้อสินค้า'
 
 
+
 class OrderItem(models.Model):
     product=models.CharField(max_length=250)
     quantity=models.IntegerField()

@@ -1,10 +1,11 @@
 {% extends "layouts/base.html" %}
-
+{% load humanize %}
 <style>
   .home-section .home-content {
     position: relative;
     padding-top: 50px;
   }
+ 
 </style>
 
 {% block t %}
@@ -12,29 +13,53 @@
 {% endblock %}
 
 {% block nav %}
+
 วันที่ : {{formatDate}}
+<!--<form method="post">
+  {% csrf_token %}
+          จากวันที่ <input type="date" name="fromDate"  required>
+          ถึง <input type="date" name="toDate"  required>
+      
+      <button type="submit" class="btn btn-success">ตกลง</button>
+</form>-->
+
 {% endblock %}
 
 {% block content %}
 
 <div class="home-content">
+  <div class="container--fluid">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        <h3>ยอดขาย <br> {{total | intcomma}} </h3>
+      </div>
+      <div class="col-lg-4 text-center">
+        <h3>ต้นทุนรวม <br> {{cost | intcomma}} </h3>
+      </div>
+      <div class="col-lg-4 text-center">
+        <h3>กำไรรวม <br>{{profit | intcomma}} </h3>
+      </div>
+    </div>
+  </div>
+  <br>
   <table class="table" style=" margin-left: 6%;  width: 90%;">
     <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
-        <th scope="col" width="5%"style="text-align: center;">วันที่ซื้อ</th>
-        <th scope="col" width="5%"style="text-align: center;">เวลา</th>
-        <th scope="col" width="5%"style="text-align: center;">ยอดชำระ</th>
+        <th scope="col" width="5%" style="text-align: center;">วันที่ซื้อ</th>
+        <th scope="col" width="5%" style="text-align: center;">เวลา</th>
+        <th scope="col" width="5%" style="text-align: center;">ยอดชำระ</th>
         <th scope="col" width="5%" style="text-align: center;">จำนวน</th>
         <th scope="col" width="5%" style="text-align: center;">รับเงิน</th>
         <th scope="col" width="5%" style="text-align: center;">เงินทอน</th>
+        <th scope="col" width="5%" style="text-align: center;">ต้นทุน</th>
         <th scope="col" width="5%" style="text-align: center;">กำไร</th>
         <th scope="col" width="3%" style="text-align: center;">รายละเอียด</th>
-        <th scope="col" width="5%" style="text-align: center;">ลบ</th>
-      
+        <th scope="col" width="3%" style="text-align: center;">ลบ</th>
+
       </tr>
     </thead>
-    <tbody style="font-size: 18px; font-weight: bold; text-align: center;"> 
-      {% for order in orders %} 
+    <tbody style="font-size: 18px; font-weight: bold; text-align: center;">
+      {% for order in orders %}
       <tr>
         <td class="created">
           <p>{{order.created | date:'d M Y'}}</p>
@@ -55,18 +80,22 @@
           <p>{{order.amount}} บาท</p>
         </td>
         <td class="profit">
+          <p>{{order.cost}} บาท</p>
+        </td>
+        <td class="profit">
           <p>{{order.profit}} บาท</p>
         </td>
         <td class="data">
 
           <a href="{%url 'detailOrderItem' order.id  %}">
             <i class='bx bx-show text-success' style="font-size: 25px;"></i>
-           
+
           </a>
-          
+
         </td>
         <td class="del" style="text-align: center;">
-          <a href="{%url 'deleteReportSale' order.id  %}" onclick="return confirm('คุณต้องการลบหมวดหมู่สินค้าหรือไม่ ?')">
+          <a href="{%url 'deleteReportSale' order.id  %}"
+            onclick="return confirm('คุณต้องการลบหมวดหมู่สินค้าหรือไม่ ?')">
             <i class='bx bx-message-square-x text-danger'></i>
           </a>
         </td>
@@ -74,6 +103,6 @@
       {% endfor %}
     </tbody>
   </table>
-  
+
 </div>
 {% endblock %}

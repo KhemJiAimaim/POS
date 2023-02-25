@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %}
-
+{% load humanize %}
 <style>
   .home-section .home-content {
     position: relative;
@@ -12,14 +12,28 @@
 {% endblock %}
 
 {% block nav %}
-วันที่ : {{formatDate}}
+<h5 class="text-center">ตั้งแต่ <span style="color:red;">{{fd}}</span> ถึง <span
+  style="color:red;">{{td}}</span></h5>
+
 {% endblock %}
 
 {% block content %}
 
 <div class="home-content">
-  <h5 class="text-center">ตั้งแต่ <span style="color:red;">{{fd}}</span> ถึง <span
-    style="color:red;">{{td}}</span></h5><br>
+  <div class="container--fluid">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        <h3>ยอดขาย <br> {{total | intcomma}} </h3>
+      </div>
+      <div class="col-lg-4 text-center">
+        <h3>ต้นทุนรวม <br> {{cost | intcomma}} </h3>
+      </div>
+      <div class="col-lg-4 text-center">
+        <h3>กำไรรวม <br>{{profit | intcomma}} </h3>
+      </div>
+    </div>
+  </div>
+  <br>
   <table class="table" style=" margin-left: 6%;  width: 90%;">
     <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
       <tr>
@@ -29,6 +43,7 @@
         <th scope="col" width="5%" style="text-align: center;">จำนวน</th>
         <th scope="col" width="5%" style="text-align: center;">รับเงิน</th>
         <th scope="col" width="5%" style="text-align: center;">เงินทอน</th>
+        <th scope="col" width="5%" style="text-align: center;">ต้นทุน</th>
         <th scope="col" width="5%" style="text-align: center;">กำไร</th>
         <th scope="col" width="3%" style="text-align: center;">รายละเอียด</th>
         <th scope="col" width="5%" style="text-align: center;">ลบ</th>
@@ -55,6 +70,9 @@
         </td>
         <td class="amount">
           <p>{{order.amount}} บาท</p>
+        </td>
+        <td class="profit">
+          <p>{{order.cost}} บาท</p>
         </td>
         <td class="profit">
           <p>{{order.profit}} บาท</p>
