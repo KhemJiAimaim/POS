@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor
+from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor , ProfitProduct
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate, logout
@@ -93,6 +93,24 @@ def checkout_add(request):
             cart_items = CartItem.objects.filter(
             cart=cart, active=True)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
+                print("item",item.product)
+                totalProfit = (item.product.price - item.product.cost)*item.quantity
+                try:
+                    print("data" , item.product.barcode)
+                    profitDataItem = ProfitProduct.objects.get(barcode=item.product.barcode)
+                    profitDataItem.profitTotal += totalProfit
+                    profitDataItem.save()
+                except ProfitProduct.DoesNotExist:
+                    profitDataItem = None
+                    print("Data DoesNotExist")
+                    pass
+                if profitDataItem is None:
+                        profitData = ProfitProduct.objects.create(
+                        barcode=item.product.barcode,
+                        profitTotal=totalProfit,
+                        nameProduct = item.product.name
+                         )
+                        profitData.save()
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity
             profit = total-cost
