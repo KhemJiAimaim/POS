@@ -8,12 +8,14 @@ from django.contrib.admin.widgets import  AdminDateWidget, AdminTimeWidget, Admi
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ('name',)
+        fields = ('name','slug')
         labels = {
             'name':'',
+            'slug':'',
         }
         widgets = {
-             'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ชื่อหมวดหมู่สินค้า'})
+             'name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ชื่อหมวดหมู่สินค้า'}),
+             'slug': forms.TextInput(attrs={'class':'form-control', 'placeholder':'ชื่อหมวดหมู่สินค้า (ภาษาอังกฤษ)'})
              }
              
 class ProductForm(ModelForm):

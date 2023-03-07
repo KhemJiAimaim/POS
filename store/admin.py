@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category , Product , Cart ,Order,OrderItem,Debtor
+from .models import Category , Product , Cart ,Order,OrderItem,Debtor , ProfitProduct
 
 # Register your models here.
 
@@ -27,6 +27,9 @@ class DebtorItemAdmin(admin.ModelAdmin):
     list_display=['name','phone','total','cash_limit','balance','created_at','updated_at']
     list_per_page=10
 
+class ProfitProductAdmin(admin.ModelAdmin):
+    list_display=['barcode','nameProduct','profitTotal','created_at','updated_at']
+    list_per_page=10
 
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Product,ProductAdmin)
@@ -34,3 +37,4 @@ admin.site.register(Cart)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(OrderItem,OrderItemAdmin)
 admin.site.register(Debtor,DebtorItemAdmin)
+admin.site.register(ProfitProduct,ProfitProductAdmin)

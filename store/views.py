@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor
+from store.models import Category, Product, Cart, CartItem, Order, OrderItem , Debtor , ProfitProduct
 from django.urls import reverse
 from django.template import loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -38,7 +38,7 @@ def pos(request, category_slug=None):
         category_page = get_object_or_404(Category, slug=category_slug)
         product = Product.objects.all().filter(category=category_page , active = 1)
     else:
-        product = Product.objects.all().filter(active = 1)
+        product = Product.objects.all().filter(active = 1 )
 
     total = 0  # ยอดชำระ
     cost = 0  # ยอดต้นทุน
@@ -79,6 +79,8 @@ def pos(request, category_slug=None):
         'counter': counter
     })
 
+
+
 def checkout_add(request):
     money = 0  # รับเงิน
     amount = 0  # เงินถอน
@@ -99,13 +101,32 @@ def checkout_add(request):
             print(total)
             amount = money - total
             print(amount)
+
             # บันทึกข้อมูลใบสั่งซื้อ
             cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
             cart_items = CartItem.objects.filter(cart=cart, active=1)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
+                print("item",item.product)
+                totalProfit = (item.product.price - item.product.cost)*item.quantity
+                try:
+                    print("data" , item.product.barcode)
+                    profitDataItem = ProfitProduct.objects.get(barcode=item.product.barcode)
+                    profitDataItem.profitTotal += totalProfit
+                    profitDataItem.save()
+                except ProfitProduct.DoesNotExist:
+                    profitDataItem = None
+                    print("Data DoesNotExist")
+                    pass
+                if profitDataItem is None:
+                        profitData = ProfitProduct.objects.create(
+                        barcode=item.product.barcode,
+                        profitTotal=totalProfit,
+                        nameProduct = item.product.name
+                         )
+                        profitData.save()
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity
-                profit = total-cost
+            profit = total-cost
             order = Order.objects.create(
                 money=money,
                 total=total,
@@ -115,13 +136,13 @@ def checkout_add(request):
                 amount = amount
             )
             order.save()
+            
             # บันทึกรายการสั่งซื้อ
             for item in cart_items:
                 order_item = OrderItem.objects.create(
                 product=item.product.name,
                 quantity=item.quantity,
                 price=item.product.price,
-                cost=item.product.cost,
                 order=order
                 )
                 order_item.save()
@@ -151,6 +172,7 @@ def checkout_add(request):
             print("Exception Get" , e)
 
 
+
 def ch(request):
     return render(request, 'ch.html')
 
@@ -163,7 +185,7 @@ def product(request, category_slug=None):
 
     if category_slug != None:
         category_page = get_object_or_404(Category, slug=category_slug)
-        product = Product.objects.all().filter(category=category_page  , active = True)
+        product = Product.objects.all().filter(category=category_page  , active = 1)
     else:
         product = Product.objects.all().filter()
 
@@ -224,7 +246,44 @@ def deleteProduct(request, product_id):
 
 
 def index(request):
-    return render(request, 'index.html')
+    now = datetime.now()
+    current_year = now.strftime("%Y")
+    current_month = now.strftime("%m")
+    current_day = now.strftime("%d")
+    products = len(Product.objects.all())
+    transaction = len(Order.objects.filter(
+        created__year=current_year,
+        created__month = current_month,
+        created__day = current_day
+    ))
+    order = Order.objects.filter(
+        created__year=current_year,
+        created__month = current_month,
+        created__day = current_day
+    )
+    today_sales = Order.objects.filter(
+        created__year=current_year,
+        created__month = current_month,
+        created__day = current_day
+    ).all()
+    total_sales = sum(today_sales.values_list('total',flat=True))
+    total_cost = sum(today_sales.values_list('cost',flat=True))
+    total_profit = sum(today_sales.values_list('profit',flat=True))
+
+    profit = ProfitProduct.objects.all().filter()
+
+    context = {
+        'page_title':'Home',
+        'products' : products,
+        'transaction' : transaction,
+        'total_sales' : total_sales,
+        'total_cost': total_cost,
+        'total_profit':total_profit,
+        'order':order,
+        'profit':profit
+    }
+    return render(request, 'index.html',context)
+    
 
 
 def category(request):
@@ -322,7 +381,6 @@ def addCartSearch(request):
                 # บันทึกเข้าฐานข้อมูล
 
             try:
-
                 # ซื้อรายการสินค้าซ้ำ
                 cart_item = CartItem.objects.get(product=product, cart=cart, )
                 if cart_item.quantity < cart_item.product.stock:
@@ -354,7 +412,6 @@ def removeCart(request, product_id):
 def deleteCart(request):
     cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
     cart.delete()
-
     return redirect('/')
 
 
@@ -404,6 +461,24 @@ def debtorCaseNew(request):
             cart_items = CartItem.objects.filter(
             cart=cart, active=1)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
+                print("item",item.product)
+                totalProfit = (item.product.price - item.product.cost)*item.quantity
+                try:
+                    print("data" , item.product.barcode)
+                    profitDataItem = ProfitProduct.objects.get(barcode=item.product.barcode)
+                    profitDataItem.profitTotal += totalProfit
+                    profitDataItem.save()
+                except ProfitProduct.DoesNotExist:
+                    profitDataItem = None
+                    print("Data DoesNotExist")
+                    pass
+                if profitDataItem is None:
+                        profitData = ProfitProduct.objects.create(
+                        barcode=item.product.barcode,
+                        profitTotal=totalProfit,
+                        nameProduct = item.product.name
+                         )
+                        profitData.save()
                 total += (item.product.price*item.quantity)
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity
@@ -496,6 +571,24 @@ def plusDebtor(request, debtor_id):
             cart_items = CartItem.objects.filter(
             cart=cart, active=1)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
+                print("item",item.product)
+                totalProfit = (item.product.price - item.product.cost)*item.quantity
+                try:
+                    print("data" , item.product.barcode)
+                    profitDataItem = ProfitProduct.objects.get(barcode=item.product.barcode)
+                    profitDataItem.profitTotal += totalProfit
+                    profitDataItem.save()
+                except ProfitProduct.DoesNotExist:
+                    profitDataItem = None
+                    print("Data DoesNotExist")
+                    pass
+                if profitDataItem is None:
+                        profitData = ProfitProduct.objects.create(
+                        barcode=item.product.barcode,
+                        profitTotal=totalProfit,
+                        nameProduct = item.product.name
+                         )
+                        profitData.save()
                 total += (item.product.price*item.quantity)
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity

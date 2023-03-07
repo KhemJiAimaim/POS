@@ -7,7 +7,7 @@ from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255 , blank=True)
+    slug = models.SlugField(max_length=255)
 
     class Meta:
         ordering = ['id'] #เรียงจากน้อยไปมาก ถ้า -id จะเป็นจากมากไปน้อย
@@ -108,7 +108,8 @@ class OrderItem(models.Model):
     product=models.CharField(max_length=250)
     quantity=models.IntegerField()
     price=models.DecimalField(max_digits=10,decimal_places=2)
-    cost = models.FloatField() #ต้นทุนของสินค้า
+    # cost = models.FloatField() #ต้นทุนของสินค้า
+    cost=models.DecimalField(max_digits=10,decimal_places=2,null=True) #ต้นทุนของสินค้า
     order=models.ForeignKey(Order,on_delete=models.CASCADE ,null=True)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
@@ -148,3 +149,19 @@ class Debtor(models.Model):
         ordering = ['updated_at']
         verbose_name = 'ลูกหนี้'
         verbose_name_plural = 'ข้อมูลลูกหนี้'
+
+class ProfitProduct(models.Model):
+    barcode = models.CharField(max_length=255 , null=True)
+    profitTotal = models.DecimalField(max_digits=10, decimal_places=2 , null=True)
+    nameProduct = models.CharField(max_length=100 ,  null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ProfitProduct'
+        verbose_name = 'กำไร'
+        ordering = ['-profitTotal']
+        verbose_name_plural = 'ข้อมูลกำไร'
+    
+    def __str__(self):
+        return self.barcode

@@ -180,7 +180,7 @@
                 {% endif %}
 
                 {% for i in product.paginator.page_range %}
-                <li class="page-item {% if product.number == i %}active{% endif %}"><a class="page-link "
+                <li class="page-item {% if product.number == i %}active{% endif %}" ><a class="page-link "
                         href="?page={{i}}">{{i}}</a></li>
                 {% endfor %}
 

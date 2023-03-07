@@ -80,20 +80,14 @@
           <span class="links_name">ลูกหนี้</span>
         </a>
       </li>
-      <!--<li>
-          <a href="#">
-            <i class='bx bx-coin-stack' ></i>
-            <span class="links_name">Stock</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class='bx bx-book-alt' ></i>
-            <span class="links_name">Total order</span>
-          </a>
-        </li>-->
-
-      <li class="log_out">
+      <li>
+      <a href="/admin">
+        <i class='bx bx-user'></i>
+        <span class="links_name">Admin</span>
+      </a>
+    </li>
+    
+    <li class="log_out">
         <a href="{% url 'signOut' %}">
           <i class='bx bx-log-out'></i>
           <span class="links_name">ออกจากระบบ</span>
@@ -499,21 +493,32 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    width: 60%;
+    margin-bottom: 10px;
   }
 
   .sales-boxes .box .button a {
     color: #fff;
-    background: #0A2558;
+    background: #28a745;
     padding: 4px 12px;
     font-size: 15px;
     font-weight: 400;
     border-radius: 4px;
     text-decoration: none;
     transition: all 0.3s ease;
+    
   }
-
+  .sales-boxes .box .dropdown-divider {
+    position: absolute;
+    bottom: 0;
+    width: 60%;
+    margin-bottom: 50px;
+    
+  }
   .sales-boxes .box .button a:hover {
-    background: #0d3073;
+    background: #026332;
   }
 
   /* Right box */
