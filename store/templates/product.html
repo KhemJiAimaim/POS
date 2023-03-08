@@ -22,6 +22,32 @@
 
 {% endblock %}
 
+{% block js %}
+  <script>
+    function deleteProduct(id){
+      Swal.fire({
+        title: 'คุณต้องการลบข้อมูลสินค้าออกหรือไม่ ?',
+        text: " ",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+        }
+      })
+    }
+  </script>
+{% endblock %}
+
+
 {% block content %}
 <div class="home-content" style=" margin-left: 6%;  width: 90%;">
   <div class="container--fluid">
@@ -58,11 +84,11 @@
       <tr>
         <th scope="col" width="1%" style="text-align: center;">สถานะ</th>
         <th scope="col" width="10%" style="text-align: center;">วันที่เพิ่มสินค้า</th>
-        <th scope="col" width="5%" >รหัสสินค้า</th>
-        <th scope="col" width="10%">ชื่อสินค้า</th>
+        <th scope="col" width="10%" >รหัสสินค้า</th>
+        <th scope="col" width="10%" >ชื่อสินค้า</th>
         <th scope="col" width="3%" style="text-align: center;">ราคา</th>
         <th scope="col" width="3%" style="text-align: center;">ต้นทุน</th>
-        <th scope="col" width="10%" style="text-align: center;">จำนวนสินค้า</th>
+        <th scope="col" width="10%" style="text-align: center;">สินค้าคงเหลือ</th>
         <th scope="col" width="10%" style="text-align: center;">วันหมดอายุ</th>
         <th scope="col" width="10%" style="text-align: center;">สถานะคลังสินค้า</th>
         <th scope="col" width="3%" style="text-align: center;">แก้ไข</th>
@@ -98,7 +124,7 @@
         {% if products.stock <= 0 %} <td class="cart_stock text-danger text-center">
           <p>{{products.stock}} ชิ้น</p>
           </td>
-          {% elif products.stock <= 5 %} <td class="cart_stock text-warning text-center">
+          {% elif products.stock <= 3 %} <td class="cart_stock text-warning text-center">
             <p>{{products.stock}} ชิ้น</p>
             </td>
             {% else %}
@@ -118,7 +144,7 @@
                 สินค้าหมด
               </p>
               </td>
-              {% elif products.stock <= 5 %} <td class="cart_status">
+              {% elif products.stock <= 3 %} <td class="cart_status">
                 <p class="text-center text-warning" style="font-size: 18px;">
                   สินค้าใกล้หมด
                 </p>

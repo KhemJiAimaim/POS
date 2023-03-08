@@ -9,13 +9,19 @@
 <script src="{% static 'myjs.js' %}"></script>
 {% endblock %}
 
+
+   
+
 {% block content %}
 
 
 
 <div class="container-fluid">
+    
+
     <div class="row">
         <div class="col-lg-6 mt-3">
+            
             <h2 class="text-center mt-3">รายการสินค้า</h2><br>
 
             <div class="row">
@@ -37,12 +43,10 @@
                             <td class="price" width="15%"><strong>ราคา</strong></td>
                             <td class="quantity" width="15%"><strong>จำนวน</strong></td>
                             <td class="total" width="15%"><strong>รวม</strong></td>
-                            <td class="total" width="20%"><a
-                                    onclick="return confirm('คุณต้องการลบรายการสินค้าทั้งหมดหรือไม่ ?')"
-                                    href="{%url 'deleteCart' %}"><i class="fa-solid fa-trash text-danger"></i></a>
+                            <td class="total" width="20%">
+                                <a onclick="return confirm('คุณต้องการลบรายการสินค้าทั้งหมดหรือไม่ ?')"
+                                href="{%url 'deleteCart' %}"><i class="fa-solid fa-trash text-danger"></i></a>
                             </td>
-                           
-
 
                     </thead>
 
@@ -66,8 +70,9 @@
                 <p class="cart_total_price">{{item.sub_total}}</p>
             </td>
             <td class="cart_delete">
-                <a class="cart_quantity_delete" onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')"
-                    href="{%url 'removeCart' item.product.id%}"><i class="fa-solid fa-trash text-danger"></i></a>
+                
+                <a class="cart_quantity_delete"  onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')"
+                href="{%url 'removeCart' item.product.id%}"><i class="fa-solid fa-trash text-danger"></i></a>
             </td>
             </tr>
             {% endfor %}
@@ -171,7 +176,32 @@
             </div>
             {% endfor %}
         </div>
+<style>
+    .page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #28a745;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+.page-link:hover {
+    z-index: 2;
+    color: #28a745;
+    text-decoration: none;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
 
+</style>
         <footer style="position: absolute; bottom: 0; width: 95%;">
             <div class="dropdown-divider"></div>
             <ul class="pagination justify-content-end" >
@@ -180,8 +210,8 @@
                 {% endif %}
 
                 {% for i in product.paginator.page_range %}
-                <li class="page-item {% if product.number == i %}active{% endif %}" ><a class="page-link "
-                        href="?page={{i}}">{{i}}</a></li>
+                <li class="page-item {% if product.number == i %}active{% endif %}">
+                    <a class="page-link" href="?page={{i}}">{{i}}</a></li>
                 {% endfor %}
 
                 {% if product.has_next %}
@@ -192,6 +222,5 @@
     </div>
 </div>
 </div>
-
 
 {% endblock %}

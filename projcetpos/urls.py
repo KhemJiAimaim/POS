@@ -30,7 +30,7 @@ urlpatterns = [
     path('product/', views.product, name="product"),
     path('add_product/', views.add_product, name="add_product"),
     path('product/edit_product<int:product_id>', views.edit_product, name="edit_product"),
-    path('product/delete<int:product_id>', views.deleteProduct , name="deleteProduct"),
+    path('product/delete/<int:product_id>', views.deleteProduct , name="deleteProduct"),
     path('pdf_product', views.pdfProduct , name="pdfProduct"),
    
     path('category/', views.category, name="category"),
@@ -39,12 +39,10 @@ urlpatterns = [
     path('edit_category<int:category_id>', views.edit_category, name="edit_category"),
     path('delete<int:category_id>', views.deleteCategory , name="deleteCategory"),
 
-    #path('pdf_sale', views.pdfSale , name="pdfSale"),
     path('report_sale', views.reportSale , name="reportSale"),
     path('orderItem/detail/<int:order_id>', views.detailOrderItem , name="detailOrderItem"),
     path('deleteReportSale/<int:order_id>', views.deleteReportSale , name="deleteReportSale"),
     path('dateReport', views.dateReport , name="dateReport"),
-    #path('betweendateReport', views.betweendateReport , name="betweendateReport"),
 
     path('cart/add/<int:product_id>', views.addCart , name="addCart"),
     path('cart/add', views.addCartSearch , name="addCartSe"),

@@ -61,7 +61,7 @@ def pos(request, category_slug=None):
     except Exception as e:
         pass
 
-    paginator = Paginator(product, 12)
+    paginator = Paginator(product, 1)
     page = request.GET.get('page')
     try:
         product = paginator.page(page)
@@ -217,6 +217,7 @@ def add_product(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, "บันทึกข้อมูลสำเสร็จ")
             return HttpResponseRedirect('/product?submitted=True')
     else:
         form = ProductForm
@@ -231,6 +232,7 @@ def edit_product(request, product_id):
                        request.FILES or None, instance=product)
     if form.is_valid():
         form.save()
+        messages.success(request, "แก้ไขข้อมูลสำเสร็จ")
         return redirect('product')
 
     return render(request, 'edit_product.html', {
@@ -247,6 +249,7 @@ def deleteProduct(request, product_id):
 
 def index(request):
     now = datetime.now()
+    formatDate = now.strftime("%d-%m-%Y")
     current_year = now.strftime("%Y")
     current_month = now.strftime("%m")
     current_day = now.strftime("%d")
@@ -280,7 +283,8 @@ def index(request):
         'total_cost': total_cost,
         'total_profit':total_profit,
         'order':order,
-        'profit':profit
+        'profit':profit,
+        'formatDate':formatDate
     }
     return render(request, 'index.html',context)
     
@@ -299,6 +303,7 @@ def add_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "บันทึกข้อมูลสำเสร็จ")
             return HttpResponseRedirect('/category?submitted=True')
     else:
         form = CategoryForm
@@ -318,6 +323,7 @@ def edit_category(request, category_id):
     form = CategoryForm(request.POST or None, instance=category)
     if form.is_valid():
         form.save()
+        messages.success(request, "แก้ไขข้อมูลสำเสร็จ")
         return redirect('category')
 
     return render(request, 'edit_category.html', {
@@ -406,12 +412,13 @@ def removeCart(request, product_id):
     cartItem = CartItem.objects.get(product=product, cart=cart)
     # ลบรายการสินค้า 1 ออกจากตะกร้า A โดยลบจาก รายการสินค้าในตะกร้า (CartItem)
     cartItem.delete()
+    
     return redirect('/')
 
 
 def deleteCart(request):
     cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
-    cart.delete()
+    cart.delete() 
     return redirect('/')
 
 
@@ -426,9 +433,8 @@ def signInView(request):
                 login(request, user)
                 return redirect('pos')
             else:
-                messages.error(request, "Invalid username or password.")
+               form = AuthenticationForm()
     else:
-        messages.error(request, "Invalid username or password.")
         form = AuthenticationForm()
     return render(request, 'signIn.html', {'form': form})
 
@@ -443,11 +449,10 @@ def debtor(request):
     return render(request, 'debtor.html')
 
 
-def debtorCaseNew(request): 
+def debtorCaseNew(request):
     submitted = False
     currentdate = datetime.today()
     formatDate = currentdate.strftime("%d-%m-%Y")
-    
     if request.method == "POST":
         counter = 0
         cost = 0
@@ -459,7 +464,7 @@ def debtorCaseNew(request):
             form.save()
             cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
             cart_items = CartItem.objects.filter(
-            cart=cart, active=1)  # ดึงข้อมูลสินต้าในตะกร้า
+            cart=cart, active=True)  # ดึงข้อมูลสินต้าในตะกร้า
             for item in cart_items:
                 print("item",item.product)
                 totalProfit = (item.product.price - item.product.cost)*item.quantity
@@ -479,19 +484,17 @@ def debtorCaseNew(request):
                         nameProduct = item.product.name
                          )
                         profitData.save()
-                total += (item.product.price*item.quantity)
+                total = (item.product.price*item.quantity)
                 cost += (item.product.cost*item.quantity)
                 counter += item.quantity
                 profit = total-cost
-                money = 0
-                amount = 0
             order = Order.objects.create(
-                money=money,
+                money=0,
                 total=total,
                 cost=cost,
                 profit=profit,
                 quantity=counter,
-                amount = amount
+                amount = 0
             )
             order.save()
             # บันทึกรายการสั่งซื้อ
@@ -500,7 +503,6 @@ def debtorCaseNew(request):
                 product=item.product.name,
                 quantity=item.quantity,
                 price=item.product.price,
-                cost=item.product.cost,
                 order=order
                 )
                 order_item.save()
@@ -509,11 +511,12 @@ def debtorCaseNew(request):
                 product.stock = int(item.product.stock-order_item.quantity)
                 product.save()
                 item.delete()
-            submitted = True
-            return render(request , 'debtor_new.html' , {'submitted':submitted})
+            messages.success(request, "บันทึกข้อมูลสำเร็จ")
+            return redirect('debtor_old')
+            
     else:
         form = DebtorForm
-        return render(request, 'debtor_new.html' , {'form': form , 'submitted':submitted ,'formatDate':formatDate})
+        return render(request, 'debtor_new.html' , {'form': form , 'submitted':submitted , 'formatDate':formatDate})
 
 def debtorCaseOld(request):
     currentdate = datetime.today()
@@ -533,6 +536,7 @@ def debtorCaseOldEdit(request , debtor_id):
     form = DebtorForm(request.POST or None, instance=debtor)
     if form.is_valid():
         form.save()
+        messages.success(request, "แก้ไขข้อมูลสำเร็จ")
         return redirect('debtor_old')
 
     return render(request, 'edit_debtor.html', {
@@ -596,12 +600,12 @@ def plusDebtor(request, debtor_id):
                 money = 0
                 amount = 0
             order = Order.objects.create(
-                money=money,
+                money=0,
                 total=total,
                 cost=cost,
                 profit=profit,
                 quantity=counter,
-                amount = amount
+                amount = 0
             )
             order.save()
             # บันทึกรายการสั่งซื้อ
@@ -619,8 +623,6 @@ def plusDebtor(request, debtor_id):
                 product.stock = int(item.product.stock-order_item.quantity)
                 product.save()
                 item.delete()
-            submitted = True
-
             return render(request, 'debtor_plus.html', {"balance": debtor.balance,
         'formatDate':formatDate ,"statusSuccess": True}) 
     else: 
@@ -679,7 +681,7 @@ def pdfProduct (datas):
     product = Product.objects.all().filter()
      
     for products in product:
-        if products.stock <= 5:
+        if products.stock <= 3:
             data += [
                 [
                 products.EXP,
@@ -788,7 +790,3 @@ def dateReport(request):
             pass
         return render(request, 'between_date_report.html', locals() )
     return render(request, 'dateReport.html', locals())
-
-
-
-

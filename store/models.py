@@ -146,7 +146,7 @@ class Debtor(models.Model):
     
     class Meta:
         db_table = 'Debtor'
-        ordering = ['updated_at']
+        ordering = ['-updated_at']
         verbose_name = 'ลูกหนี้'
         verbose_name_plural = 'ข้อมูลลูกหนี้'
 

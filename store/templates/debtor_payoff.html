@@ -40,9 +40,20 @@
     <center>
       <div class="mb-4">
         {% if statusFail %}
-        <h2 style="color: red;"> จำนวนเงินเยอะเกินจำนวนที่ติดหนี้</h2>
+        <h2 style="color: red;"> จำนวนเงินเยอะเกินจำนวนที่ติดหนี้</h2><br>
+        <div align="center">
+          <a href="{% url 'debtor_old' %}">
+          <input type="submit" value="กลับ" class="btn btn-success" >
+          </a>
+        </div>
         {% elif statusSuccess %}
-        <h2 style="color: green;"> ชำระหนี้เสร็จสิ้น จำนวนยอดหนี้คงเหลือ {{total}}</h2>
+        <h2 style="color: green;"> ชำระหนี้เสร็จสิ้น จำนวนยอดหนี้คงเหลือ {{total}}</h2><br>
+      
+        <div align="center">
+          <a href="{% url 'debtor_old' %}">
+          <input type="submit" value="กลับ" class="btn btn-success" >
+          </a>
+        </div>
         {% else %}
         <form method="post">
           {% csrf_token %}
