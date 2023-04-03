@@ -1,0 +1,55 @@
+{% extends "layouts/base.html" %}
+
+<style>
+  .home-section .home-content {
+    position: relative;
+    padding-top: 50px;
+  }
+</style>
+
+{% block t %}
+<a href="{% url 'profitProduct' %}" style="text-decoration: none; color: rgb(0, 0, 0); ">
+สินค้าขายดี</a>
+{% endblock %}
+
+{% block nav %} 
+<form class="form-inline " action="{% url 'profitProduct' %}" , method="GET">
+    <div class="input-group mx-5">
+      <input class="form-control " name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>-->
+          <i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+  </form><br>
+วันที่ : {{formatDate}}
+{% endblock %}
+
+{% block content %}
+
+<div class="home-content">
+ 
+
+  <table class="table" style=" margin-left: 6%;  width: 90%;">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
+      <tr>
+        <th scope="col" width="10%">รหัสสินค้า</th>
+        <th scope="col" width="10%" style="text-align: center;">ชื่อสินค้า</th>
+        <th scope="col" width="10%" style="text-align: center;">รายละเอียด</th>
+        <th scope="col" width="10%" style="text-align: center;">มีกำไร</th>
+      </tr>
+    </thead>
+    <tbody style="font-size: 18px; font-weight: bold;"> 
+      {% for profits in profit %}
+      <tr>
+        <th > {{profits.barcode}} </th>
+        <td class="cart_cost text-center">{{profits.nameProduct}}</td>
+        <td class="cart_cost text-center">{{profits.description}}</td>
+        <td class="cart_cost text-center">{{profits.profitTotal}} บาท</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+</div>
+{% endblock %}

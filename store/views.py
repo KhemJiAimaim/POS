@@ -38,7 +38,7 @@ def pos(request, category_slug=None):
         category_page = get_object_or_404(Category, slug=category_slug)
         product = Product.objects.all().filter(category=category_page , active = 1)
     else:
-        product = Product.objects.all().filter(active = 1 )
+        product = Product.objects.all().filter(active = 1 ).order_by('-created')
 
     total = 0  # ยอดชำระ
     cost = 0  # ยอดต้นทุน
@@ -61,7 +61,7 @@ def pos(request, category_slug=None):
     except Exception as e:
         pass
 
-    paginator = Paginator(product, 1)
+    paginator = Paginator(product, 12)
     page = request.GET.get('page')
     try:
         product = paginator.page(page)
@@ -121,7 +121,8 @@ def checkout_add(request):
                         profitData = ProfitProduct.objects.create(
                         barcode=item.product.barcode,
                         profitTotal=totalProfit,
-                        nameProduct = item.product.name
+                        nameProduct = item.product.name,
+                        description=item.product.description
                          )
                         profitData.save()
                 cost += (item.product.cost*item.quantity)
@@ -141,6 +142,7 @@ def checkout_add(request):
             for item in cart_items:
                 order_item = OrderItem.objects.create(
                 product=item.product.name,
+                description=item.product.description,
                 quantity=item.quantity,
                 price=item.product.price,
                 order=order
@@ -188,6 +190,7 @@ def product(request, category_slug=None):
         product = Product.objects.all().filter(category=category_page  , active = 1)
     else:
         product = Product.objects.all().filter()
+        products = len(Product.objects.all())
 
     try:
         product = Product.objects.filter(name__icontains=request.GET['title']) | Product.objects.filter(
@@ -195,7 +198,7 @@ def product(request, category_slug=None):
     except Exception as e:
         pass
 
-    paginator = Paginator(product, 12)
+    paginator = Paginator(product, 30)
     page = request.GET.get('page')
     try:
         product = paginator.page(page)
@@ -206,6 +209,7 @@ def product(request, category_slug=None):
 
     return render(request, 'product.html', {
         'product':  product,
+        'products':  products,
         'category': category_page,
         'formatDate': formatDate
     })
@@ -246,7 +250,20 @@ def deleteProduct(request, product_id):
     product.delete()
     return redirect('product')
 
+def profitProduct(request):
+    currentdate = datetime.today()
+    formatDate = currentdate.strftime("%d-%m-%Y")
+    profit = ProfitProduct.objects.all().filter()
 
+    try:
+         profit = ProfitProduct.objects.filter(nameProduct__icontains=request.GET['title']) | ProfitProduct.objects.filter(
+            barcode__icontains=request.GET['title'])
+    except Exception as e:
+        pass
+    return render(request, 'profit.html', {
+        'profit': profit,
+        'formatDate': formatDate
+    })
 def index(request):
     now = datetime.now()
     formatDate = now.strftime("%d-%m-%Y")
@@ -264,6 +281,7 @@ def index(request):
         created__month = current_month,
         created__day = current_day
     )
+   
     today_sales = Order.objects.filter(
         created__year=current_year,
         created__month = current_month,
@@ -273,7 +291,24 @@ def index(request):
     total_cost = sum(today_sales.values_list('cost',flat=True))
     total_profit = sum(today_sales.values_list('profit',flat=True))
 
+    
     profit = ProfitProduct.objects.all().filter()
+    paginator = Paginator(profit, 15) 
+    page = request.GET.get('page')
+    try:
+        profit = paginator.page(page)
+      
+    except PageNotAnInteger:
+        profit = paginator.page(1)
+    
+    paginator = Paginator(order, 16) 
+    page = request.GET.get('page')
+    try:
+        order = paginator.page(page)
+      
+    except PageNotAnInteger:
+        order = paginator.page(1)
+    
 
     context = {
         'page_title':'Home',
@@ -376,33 +411,39 @@ def addCartSearch(request):
     if request.method == "POST":
         barcodesearch = request.POST.get('barcodesearch')
         # มันส่งจะไอดีมาจากนั้น ไอดีจะเป็นตังดึงสินค้าออกมาตามรหัส
-        product = Product.objects.get(barcode=barcodesearch)
-        if product.stock != 0:
-            # สร้างตะกร้าสินค้า
-            try:
-                cart = Cart.objects.get(cart_id=_cart_id(request))
-            except Cart.DoesNotExist:
-                cart = Cart.objects.create(cart_id=_cart_id(request))
-                cart.save()
-                # บันทึกเข้าฐานข้อมูล
+        try :
+            product = Product.objects.get(barcode=barcodesearch)
+            if product.stock != 0 and product.active == 1:
+                # สร้างตะกร้าสินค้า
+                try:
+                    cart = Cart.objects.get(cart_id=_cart_id(request))
+                except Cart.DoesNotExist:
+                    cart = Cart.objects.create(cart_id=_cart_id(request))
+                    cart.save()
+                    # บันทึกเข้าฐานข้อมูล
 
-            try:
-                # ซื้อรายการสินค้าซ้ำ
-                cart_item = CartItem.objects.get(product=product, cart=cart, )
-                if cart_item.quantity < cart_item.product.stock:
-                    # เปลี่ยนจำนวนรายการสินค้า
-                    cart_item.quantity += 1
-                    # บันทึก / อัพเดทค่า
+                try:
+                    # ซื้อรายการสินค้าซ้ำ
+                    cart_item = CartItem.objects.get(product=product, cart=cart, )
+                    if cart_item.quantity < cart_item.product.stock:
+                        # เปลี่ยนจำนวนรายการสินค้า
+                        cart_item.quantity += 1
+                        # บันทึก / อัพเดทค่า
+                        cart_item.save()
+                except CartItem.DoesNotExist:
+                    # ซื้อรายการสินค้าครั้งแรก
+                    cart_item = CartItem.objects.create(
+                        product=product,
+                        cart=cart,
+                        quantity=1
+                    )
                     cart_item.save()
-            except CartItem.DoesNotExist:
-                # ซื้อรายการสินค้าครั้งแรก
-                cart_item = CartItem.objects.create(
-                    product=product,
-                    cart=cart,
-                    quantity=1
-                )
-                cart_item.save()
-    return redirect('/')
+            if product.stock == 0 and product.active == 0:
+                messages.success(request, "สินค้ายังไม่พร้อมซื้อขาย")
+            return redirect('/')
+        except Product.DoesNotExist:
+            messages.success(request, "ยังไม่มีสินค้านี้ในคลัง")
+            return redirect('/')
 
 def removeCart(request, product_id):
     # ทำงานกับตะกร้าสินค้า
@@ -417,9 +458,12 @@ def removeCart(request, product_id):
 
 
 def deleteCart(request):
-    cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
-    cart.delete() 
-    return redirect('/')
+    try :
+        cart = Cart.objects.get(cart_id=_cart_id(request))  # ดึงตะกร้าสินค้ามา
+        cart.delete()
+        return redirect('/')
+    except Cart.DoesNotExist:
+        return redirect('/')
 
 
 def signInView(request):
@@ -481,7 +525,8 @@ def debtorCaseNew(request):
                         profitData = ProfitProduct.objects.create(
                         barcode=item.product.barcode,
                         profitTotal=totalProfit,
-                        nameProduct = item.product.name
+                        nameProduct = item.product.name,
+                        description=item.product.description
                          )
                         profitData.save()
                 total = (item.product.price*item.quantity)
@@ -501,6 +546,7 @@ def debtorCaseNew(request):
             for item in cart_items:
                 order_item = OrderItem.objects.create(
                 product=item.product.name,
+                description=item.product.description,
                 quantity=item.quantity,
                 price=item.product.price,
                 order=order
@@ -590,7 +636,8 @@ def plusDebtor(request, debtor_id):
                         profitData = ProfitProduct.objects.create(
                         barcode=item.product.barcode,
                         profitTotal=totalProfit,
-                        nameProduct = item.product.name
+                        nameProduct = item.product.name,
+                        description=item.product.description
                          )
                         profitData.save()
                 total += (item.product.price*item.quantity)
@@ -612,6 +659,7 @@ def plusDebtor(request, debtor_id):
             for item in cart_items:
                 order_item = OrderItem.objects.create(
                 product=item.product.name,
+                description=item.product.description,
                 quantity=item.quantity,
                 price=item.product.price,
                 cost=item.product.cost,
@@ -668,17 +716,17 @@ def pdfProduct (datas):
     elements = []
 
     data=  [
-        ['รายการสินค้าเหลือน้อย หรือ หมดสต๊อก', ' ', ' ', ''],
+        ['รายการสินค้าเหลือน้อย หรือ หมดสต๊อก', ' ', ' ',' ', ''],
         [' ', '', '', ''],
-        ['ประจำวันที่ {}'.format(formatDate), ' ', ' ', ' '],
-        [' ', '', '', '', ' '],
-        [' ', '', '', '', ' '],
-        ['วันหมดอายุ', 'รหัสสินค้า', 'ชื่อ', 'จำนวนสินค้า'],
+        ['ประจำวันที่ {}'.format(formatDate), ' ', ' ',' ', ' '],
+        [' ', '', '', '', ' ',' '],
+        [' ', '', '', '',' ', ' '],
+        ['วันหมดอายุ', 'รหัสสินค้า', 'ชื่อ','รายละเอียด ', 'จำนวนสินค้า'],
         [' ', '', '', '', ' '],
         
     ]
 
-    product = Product.objects.all().filter()
+    product = Product.objects.all().filter().order_by('stock')
      
     for products in product:
         if products.stock <= 3:
@@ -687,6 +735,7 @@ def pdfProduct (datas):
                 products.EXP,
                 products.barcode,
                 products.name,
+                products.description,
                 products.stock]
             ]
         else: 0
@@ -743,6 +792,7 @@ def reportSale(request, ):
     except Exception as e:
         pass
 
+   
         
     return render(request, 'report_sale.html',
     {'orders':orders,
@@ -790,3 +840,4 @@ def dateReport(request):
             pass
         return render(request, 'between_date_report.html', locals() )
     return render(request, 'dateReport.html', locals())
+

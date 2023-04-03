@@ -107,8 +107,8 @@
                   </a>
                 </td>
                 <td class="cart_del" style="text-align: center;">
-                  <a href="{%url 'deleteDebtor' debtor.id  %}"
-                    onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')">
+                  <a href="#"
+                    onclick="deleteDebtor({{debtor.id}})">
                     <i class='bx bx-message-square-x text-danger'></i>
                   </a>
                 </td>

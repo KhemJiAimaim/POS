@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s$qmr$z!!4vsx)+fdo^tolmzj(%#-%%!m@v@o6u(+^13)45sao
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 MWSSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
@@ -56,10 +56,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'projcetpos.urls'
 
+import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'store/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,7 +135,7 @@ STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = Path.joinpath(BASE_DIR,  'static' , 'media')
+MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media')
 
 
 

@@ -7,7 +7,7 @@
 
   <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
   <!-- CSS CUSTOM -->
-  <link rel=”stylesheet” href=”{% static 'css/base.css' %}”>
+  
 
   <!-- CSS -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
@@ -29,9 +29,77 @@
   <title>Phacharamon Shop</title>
 </head>
 
+<script>
+  function delProduct(id) {
+    Swal.fire({
+      title: 'คุณต้องการลบรายการสินค้า?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1e7e34',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/product/delete/" + id
+      }
+    })
+  }
+
+  function deleteReportSale(id) {
+    Swal.fire({
+      title: 'คุณต้องการลบ?',
+      text: "รายงานการขายสินค้า",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1e7e34',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/deleteReportSale/" + id
+      }
+    })
+  }
+
+  function deleteDebtor(id) {
+    Swal.fire({
+      title: 'คุณต้องการลบรายชื่อลูกหนี้?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1e7e34',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/debtor_old/delete/" + id
+      }
+    })
+  }
+
+  function deleteCategory(id) {
+    Swal.fire({
+      title: 'คุณต้องการลบหมวดหมู่สินค้า?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1e7e34',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/delete/" + id
+      }
+    })
+  }
+
+</script>
+
+
 
 <body>
-
   <div class="sidebar">
     <div class="logo-details">
       <a href="{% url 'index' %}"><i class='bx bx-store'></i></a>
@@ -56,12 +124,7 @@
           <span class="links_name">รายการสินค้า</span>
         </a>
       </li>
-      <li>
-        <a href="{% url 'category' %}">
-          <i class='bx bx-category-alt'></i>
-          <span class="links_name">หมวดหมู่สินค้า</span>
-        </a>
-      </li>
+
       <li>
         <a href="{% url 'reportSale' %}">
           <i class='bx bx-list-ul'></i>
@@ -75,19 +138,32 @@
         </a>
       </li>
       <li>
+        <a href="{% url 'profitProduct' %}">
+          <i class='bx bxs-clinic'></i>
+          <span class="links_name">สินค้าขายดี</span>
+        </a>
+      </li>
+      <li>
         <a href="{% url 'debtor_old' %}">
           <i class='bx bx-pie-chart-alt-2'></i>
           <span class="links_name">ลูกหนี้</span>
         </a>
       </li>
+
       <li>
-      <a href="/admin">
-        <i class='bx bx-user'></i>
-        <span class="links_name">Admin</span>
-      </a>
-    </li>
-    
-    <li class="log_out">
+        <a href="{% url 'category' %}">
+          <i class='bx bx-category-alt'></i>
+          <span class="links_name">หมวดหมู่สินค้า</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin" target="_blank">
+          <i class='bx bx-user' ></i>
+          <span class="links_name">Admin</span>
+        </a>
+      </li>
+
+      <li class="log_out">
         <a href="{% url 'signOut' %}">
           <i class='bx bx-log-out'></i>
           <span class="links_name">ออกจากระบบ</span>
@@ -95,6 +171,7 @@
       </li>
     </ul>
   </div>
+  
   <section class="home-section">
     <nav>
       <div class="sidebar-button">
@@ -126,7 +203,7 @@
   </section>
 
   <!--  JavaScript -->
-  
+
 
   <script>
     let sidebar = document.querySelector(".sidebar");
@@ -141,30 +218,26 @@
   </script>
   <!--  sweetalert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-     
-  
-      {% for m in messages%}
-        <script>
-       Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '{{m}}',
-          showConfirmButton: false,
-          timer: 1000
-        })
-        </script>
-      {% endfor %}
- 
-    
-  {% block js %}
-  
-  {% endblock %}
-  
+
+  {% for m in messages%}
+  <script>
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: '{{m}}',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  </script>
+  {% endfor %}
+
+
+
 </body>
 
 </html>
 
-<style>
+<style type="text/css">
   /* Googlefont Poppins CDN Link */
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
@@ -528,15 +601,17 @@
     border-radius: 4px;
     text-decoration: none;
     transition: all 0.3s ease;
-    
+
   }
+
   .sales-boxes .box .dropdown-divider {
     position: absolute;
     bottom: 0;
     width: 60%;
     margin-bottom: 50px;
-    
+
   }
+
   .sales-boxes .box .button a:hover {
     background: #026332;
   }
@@ -699,7 +774,5 @@
       background-color: #28a745;
       border-color: #28a745;
     }
-
-    
   }
 </style>

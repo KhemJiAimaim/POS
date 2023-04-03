@@ -18,8 +18,52 @@
    
     <title>Phacharamon Shop</title>
   
+    <script>
+      function getfocustxt()
+      {
+          document.getElementById("text2").focus();
+      }
+    </script>
+
+    <script>
+      function delProduct(id){
+        Swal.fire({
+          title: 'คุณต้องการลบรายการสินค้า?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#1e7e34',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then(function(result){
+          if (result.isConfirmed) {
+            window.location.href = "/cart-remove/"+id
+          }
+        })
+
+      }
+
+      function delCart(){
+        Swal.fire({
+          title: 'คุณต้องการลบ?',
+          text:'รายการสินค้าทั้งหมด',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#1e7e34',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then(function(result){
+          if (result.isConfirmed) {
+            window.location.href = "/cart/delete"
+          }
+        })
+
+      }
+    </script>
+
   </head>
-  <body>
+  <body onload="getfocustxt();">
         {% include 'layouts/navbar.html'%}
         <div class="container--fluid">
         {% block content %} {% endblock %}
@@ -35,9 +79,21 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
-    {% block js %}
-    
-    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     
+  
+      {% for m in messages%}
+        <script>
+       Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '{{m}}',
+          text: 'กรุณาตรวจสอบสถานะคลังสินค้า',
+          showConfirmButton: false,
+          timer: 1500
+        })
+        </script>
+      {% endfor %}
           
   </body>
 </html>

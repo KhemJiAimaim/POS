@@ -13,23 +13,23 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['barcode' , 'name' ]
     prepopulated_fields = {'slug' : ['name']}
     list_editable=['price' , 'stock']
-    list_per_page = 10
+    list_per_page = 20
 
 class OrderAdmin(admin.ModelAdmin):
     list_display=['id','quantity','total','money','amount' ,'cost' ,'profit','created','updated']
-    list_per_page=10
+    list_per_page=20
 
 class OrderItemAdmin(admin.ModelAdmin):
     list_display=['order','product','quantity','price','cost','created','updated']
-    list_per_page=10
+    list_per_page=20
 
 class DebtorItemAdmin(admin.ModelAdmin):
     list_display=['name','phone','total','cash_limit','balance','created_at','updated_at']
-    list_per_page=10
+    list_per_page=20
 
 class ProfitProductAdmin(admin.ModelAdmin):
-    list_display=['barcode','nameProduct','profitTotal','created_at','updated_at']
-    list_per_page=10
+    list_display=['barcode','nameProduct','description','profitTotal','created_at','updated_at']
+    #list_per_page=20
 
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Product,ProductAdmin)

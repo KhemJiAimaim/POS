@@ -1,13 +1,6 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/layouts.html" %}
 {% load humanize %}
-<style>
-  .home-section .home-content {
-    position: relative;
-    padding-top: 50px;
-  }
-</style>
-
-{% block t %}
+<!--{% block t %}
 <a href="{% url 'reportSale' %}" style="text-decoration: none; color: rgb(0, 0, 0); ">
 รายงานการขายสินค้า
 </a>
@@ -15,83 +8,91 @@
 
 {% block nav %}
 วันที่ : {{formatDate}}
-{% endblock %}
+{% endblock %}-->
 
 {% block content %}
 
 <div class="home-content">
   <div class="container">
+    <br><br>
     <div class="row my-2">
       <div class="col-md-12">
-      <div class="invoice-title text-right">
+        <div class="invoice-title text-right">
           <h3>รหัสใบสั่งซื้อ # {{order.id}}</h3>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-6">
-          <address>
-          <strong>ผู้ขายสินค้า:</strong><br>
-            ร้าน พชรมนการค้า<br>
-            63 ม.23 ต.หัวขวาง <br>
-            อ.โกสุมพิสัย จ.มหาสารคาม 44140<br>
-            เบอร์โทร 083-6602585
-          </address>
         </div>
-        <div class="col-md-6 text-right">
-          <address>
-            วันที่ : {{order.created | date:'d M Y'}}<br>
-            เวลา : {{order.created | date:'H:i:s'}} น.<br>
-          </address>
+        
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <address>
+              <strong>ผู้ขายสินค้า:</strong><br>
+              ร้าน พชรมนการค้า<br>
+              63 ม.23 ต.หัวขวาง <br>
+              อ.โกสุมพิสัย จ.มหาสารคาม 44140<br>
+              เบอร์โทร 083-6602585
+            </address>
+          </div>
+          <div class="col-md-6 text-right">
+            <address>
+              วันที่ : {{order.created | date:'d M Y'}}<br>
+              เวลา : {{order.created | date:'H:i:s'}} น.<br>
+            </address>
+            <button class="btn btn-secondary" style="border-color: rgb(255, 255, 255);" title="ปริ้นใบสั่งซื้อ" onclick="window.print();">
+              <i class="fas fa-print"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title text-center"><strong>รายการสั่งซื้อ</strong></h3><br>
-        </div>
-        <div class="panel-body">
-          <div class="table-responsive">
-            <table class="table table-condensed">
-              <thead>
-                    <tr>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title text-center"><strong>รายการสั่งซื้อ</strong></h3><br>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-condensed">
+                <thead>
+                  <tr>
                     <td><strong>ชื่อสินค้า</strong></td>
+                    <td><strong>รายละเอียด</strong></td>
                     <td class="text-center"><strong>ราคา</strong></td>
                     <td class="text-center"><strong>จำนวน</strong></td>
                     <td class="text-right"><strong>รวม</strong></td>
-                    </tr>
-              </thead>
-              <tbody>
-                {% for item in orderitem %}
-                <tr>
-                  <td>{{item.product}}</td>
-                  <td class="text-center">{{item.price}}</td>
-                  <td class="text-center">{{item.quantity}}</td>
-                  <td class="text-right">{{item.sub_total | intcomma}}</td>
-                </tr>
-                {% endfor %}
-                <tr>
+                    <td class="text-right"><strong> </strong></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in orderitem %}
+                  <tr>
+                    <td>{{item.product}}</td>
+                    <td>{{item.description}}</td>
+                    <td class="text-center">{{item.price}}</td>
+                    <td class="text-center">{{item.quantity}}</td>
+                    <td class="text-right">{{item.sub_total | intcomma}}</td>
+                    <td class="text-right">บาท</td>
+                  </tr>
+                  {% endfor %}
+                  <tr>
                     <td class="no-line"></td>
                     <td class="no-line text-center"></td>
+                    <td class="no-line"></td>
                     <td class="no-line text-center">ยอดชำระเงิน</td>
                     <td class="no-line text-right">{{order.total | intcomma}}</td>
+                    <td class="no-line text-right">บาท</td>
                   </tr>
-              </tbody>
-            </table>
-            <!--<button class="btn btn-secondary pull-right" onclick="window.print();">
-              <i class="fas fa-print"></i>
-              ปริ้นใบสั่งซื้อ
-            </button>-->
+                </tbody>
+              </table>
+            </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
 
-  
+
 </div>
 {% endblock %}

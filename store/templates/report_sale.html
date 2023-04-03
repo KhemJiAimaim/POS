@@ -1,12 +1,5 @@
 {% extends "layouts/base.html" %}
 {% load humanize %}
-<style>
-  .home-section .home-content {
-    position: relative;
-    padding-top: 50px;
-  }
- 
-</style>
 
 {% block t %}
 รายงานการขายสินค้า
@@ -27,7 +20,7 @@
 
 {% block content %}
 
-<div class="home-content">
+<div class="home-content" style=" margin-left: 2%;  width: 95%;">
   <div class="container--fluid">
     <div class="row">
       <div class="col-lg-4 text-center">
@@ -86,16 +79,15 @@
           <p>{{order.profit}} บาท</p>
         </td>
         <td class="data">
-
-          <a href="{%url 'detailOrderItem' order.id  %}">
+          <a href="{%url 'detailOrderItem' order.id  %}" target="_blank">
             <i class='bx bx-show text-success' style="font-size: 25px;"></i>
 
           </a>
 
         </td>
         <td class="del" style="text-align: center;">
-          <a href="{%url 'deleteReportSale' order.id  %}"
-            onclick="return confirm('คุณต้องการลบหมวดหมู่สินค้าหรือไม่ ?')">
+          <a href="#"
+            onclick="deleteReportSale({{order.id}})">
             <i class='bx bx-message-square-x text-danger'></i>
           </a>
         </td>
@@ -103,6 +95,5 @@
       {% endfor %}
     </tbody>
   </table>
-
 </div>
 {% endblock %}

@@ -24,12 +24,12 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, blank=True)
-    category = models.ForeignKey(Category, null=True , blank=True , on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True  , on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()
-    image = models.ImageField(upload_to='product' )
+    image = models.ImageField()
     active = models.IntegerField(default=1)
     barcode = models.CharField(max_length=255)
     EXP = models.DateField() #วันหมดอายุ
@@ -88,7 +88,7 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     money=models.IntegerField() #รับเงิน
-    amount=models.DecimalField(max_digits=10,decimal_places=2 ,null=True) #เงินถอน
+    amount=models.DecimalField(max_digits=10,decimal_places=2 ,null=True) #เงินทอน
     total=models.DecimalField(max_digits=10,decimal_places=2,null=True) #ราคาสินค้า
     cost=models.DecimalField(max_digits=10,decimal_places=2,null=True) #ต้นทุนของสินค้า
     profit=models.DecimalField(max_digits=10,decimal_places=2,null=True) #กำไรที่ได้
@@ -106,6 +106,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     product=models.CharField(max_length=250)
+    description = models.CharField(max_length=250)
     quantity=models.IntegerField()
     price=models.DecimalField(max_digits=10,decimal_places=2)
     # cost = models.FloatField() #ต้นทุนของสินค้า
@@ -153,7 +154,8 @@ class Debtor(models.Model):
 class ProfitProduct(models.Model):
     barcode = models.CharField(max_length=255 , null=True)
     profitTotal = models.DecimalField(max_digits=10, decimal_places=2 , null=True)
-    nameProduct = models.CharField(max_length=100 ,  null=True)
+    nameProduct = models.CharField(max_length=100 ,  null=True) 
+    description = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

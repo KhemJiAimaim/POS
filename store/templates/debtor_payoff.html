@@ -39,7 +39,9 @@
   <div class="container">
     <center>
       <div class="mb-4">
+        <br>
         {% if statusFail %}
+        <br>
         <h2 style="color: red;"> จำนวนเงินเยอะเกินจำนวนที่ติดหนี้</h2><br>
         <div align="center">
           <a href="{% url 'debtor_old' %}">
@@ -47,10 +49,11 @@
           </a>
         </div>
         {% elif statusSuccess %}
-        <h2 style="color: green;"> ชำระหนี้เสร็จสิ้น จำนวนยอดหนี้คงเหลือ {{total}}</h2><br>
-      
+        <br>
+        <h2 style="color: green;"> ชำระหนี้เสร็จสิ้น จำนวนยอดหนี้คงเหลือ {{total}}</h2>
+        <br>
         <div align="center">
-          <a href="{% url 'debtor_old' %}">
+          <a href="{% url 'debtor_old' %}" style="margin-top: 80px; width: 50px; font-size: 22px; height: 70px;">
           <input type="submit" value="กลับ" class="btn btn-success" >
           </a>
         </div>

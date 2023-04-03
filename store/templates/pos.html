@@ -10,18 +10,14 @@
 {% endblock %}
 
 
-   
-
 {% block content %}
 
-
-
 <div class="container-fluid">
-    
+
 
     <div class="row">
         <div class="col-lg-6 mt-3">
-            
+
             <h2 class="text-center mt-3">รายการสินค้า</h2><br>
 
             <div class="row">
@@ -38,14 +34,15 @@
                 <table class="table table-condensed    text-center ">
                     <thead style="font-size: 18px; font-weight: bold; ">
                         <tr class="cart_menu table-success">
-                            <td class="barcode" width="20%"><strong>รหัสสินค้า</strong></td>
-                            <td class="name" width="20%"><strong>ชื่อสินค้า</strong></td>
+                            <td class="barcode" width="15%"><strong>รหัสสินค้า</strong></td>
+                            <td class="name" width="15%"><strong>ชื่อสินค้า</strong></td>
+                            <td class="name" width="15%"><strong>รายละเอียด</strong></td>
                             <td class="price" width="15%"><strong>ราคา</strong></td>
                             <td class="quantity" width="15%"><strong>จำนวน</strong></td>
                             <td class="total" width="15%"><strong>รวม</strong></td>
                             <td class="total" width="20%">
-                                <a onclick="return confirm('คุณต้องการลบรายการสินค้าทั้งหมดหรือไม่ ?')"
-                                href="{%url 'deleteCart' %}"><i class="fa-solid fa-trash text-danger"></i></a>
+                                <a onclick="delCart()"
+                                    href="#"><i class="fa-solid fa-trash text-danger"></i></a>
                             </td>
 
                     </thead>
@@ -59,6 +56,9 @@
                             <td class="cart_description">
                                 <h6>{{item.product.name}}</h6>
                             </td>
+                            <td class="cart_description">
+                                <h6>{{item.product.description}}</h6>
+                            </td>
                             <td class="cart_price">
                                 <p>{{item.product.price | intcomma}}</p>
                             </td>
@@ -70,10 +70,10 @@
                 <p class="cart_total_price">{{item.sub_total}}</p>
             </td>
             <td class="cart_delete">
-                
-                <a class="cart_quantity_delete"  onclick="return confirm('คุณต้องการลบรายการสินค้าหรือไม่ ?')"
-                href="{%url 'removeCart' item.product.id%}"><i class="fa-solid fa-trash text-danger"></i></a>
-            </td>
+
+                <a class="cart_quantity_delete" onclick="delProduct({{item.product.id}})"
+                    href="#"><i class="fa-solid fa-trash text-danger"></i></a>
+            </td><!--{%url 'deleteCart' %} {%url 'removeCart' item.product.id%}-->
             </tr>
             {% endfor %}
             </tbody>
@@ -113,20 +113,19 @@
             </div>
 
             <div class="col-lg-3">
+                <form action="{% url 'addCartSe' %}" method="POST">
                     <div class="input-group">
+                        {% csrf_token %}
+                        <input class="form-control" id="text2" type="text" placeholder="สแกนรหัสสินค้า" name="barcodesearch">
                         <div class="input-group-append">
-                            <form action="{% url 'addCartSe' %}" method="POST">
-                                {% csrf_token %}
-                                    <div class="input-group-append">
-                                        <input class="form-control"  type="text" placeholder="รหัสสินค้า" name="barcodesearch">
-                                        <button type="submit" class="btn btn-success">
-                                            <i class="fa fa-barcode px-1 fa-1x"></i>
-                                        </button>
-                                    </div>
-                            </form>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-barcode"></i>
+                            </button>
                         </div>
                     </div>
+                </form>
             </div>
+
 
             <div class="col-lg-4">
                 <form class="form-inline ml-3" action="{% url 'pos' %}" , method="GET">
@@ -134,8 +133,8 @@
                         <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
                         <div class="input-group-append">
                             <button type="submit"
-                                class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>--><i
-                                    class="fa-solid fa-magnifying-glass"></i></button>
+                                class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>-->
+                                <i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                 </form>
@@ -148,8 +147,7 @@
             <div class="col-lg-3 mt-3">
                 <div class="card shadow-sm p-1  bg-white rounded ">
 
-                    {% if products.image and products.stock <= 0 %} 
-                        <a title="{{ products.description }}">
+                    {% if products.image and products.stock <= 0 %} <a title="{{ products.description }}">
                         <img src="{{ products.image.url }}" alt="image" class="card-img-top" height="160px"
                             width="110px">
                         </a>
@@ -164,54 +162,55 @@
                         {% endif %}
 
                         <div class="card-footer">
-                            {% if products.stock <= 0 %} 
-                                <h4 class="text-center text-danger font-weight-bold mb-3">
+                            {% if products.stock <= 0 %} <h4 class="text-center text-danger font-weight-bold">
                                 สินค้าหมด</h4>
                                 {% else %}
                                 <!--<a href="{%url 'addCart' products.id%}" class="btn btn-success btn-lg btn-block "> เลือกสินค้า </a>-->
-                                <h5 class="card-title text-center font-weight-bold">{{ products.name}}</h5>
+                                <h5 class=" text-center font-weight-bold">{{ products.name}}</h5>
                                 {% endif %}
                         </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-<style>
-    .page-item.active .page-link {
-    z-index: 1;
-    color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
-}
-.page-link {
-    position: relative;
-    display: block;
-    padding: .5rem .75rem;
-    margin-left: -1px;
-    line-height: 1.25;
-    color: #28a745;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-}
-.page-link:hover {
-    z-index: 2;
-    color: #28a745;
-    text-decoration: none;
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
+        <style>
+            .page-item.active .page-link {
+                z-index: 1;
+                color: #fff;
+                background-color: #28a745;
+                border-color: #28a745;
+            }
 
-</style>
-        <footer style="position: absolute; bottom: 0; width: 95%;">
+            .page-link {
+                position: relative;
+                display: block;
+                padding: .5rem .75rem;
+                margin-left: -1px;
+                line-height: 1.25;
+                color: #28a745;
+                background-color: #fff;
+                border: 1px solid #dee2e6;
+            }
+
+            .page-link:hover {
+                z-index: 2;
+                color: #28a745;
+                text-decoration: none;
+                background-color: #e9ecef;
+                border-color: #dee2e6;
+            }
+        </style>
+        <footer style="position: absolute; bottom:0; width: 95%;">
             <div class="dropdown-divider"></div>
-            <ul class="pagination justify-content-end" >
+            <ul class="pagination justify-content-end">
                 {% if product.has_previous %}
                 <li class="page-item"><a class="page-link " href="?page=product.previous_page_number">Previous</a></li>
                 {% endif %}
 
                 {% for i in product.paginator.page_range %}
                 <li class="page-item {% if product.number == i %}active{% endif %}">
-                    <a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    <a class="page-link" href="?page={{i}}">{{i}}</a>
+                </li>
                 {% endfor %}
 
                 {% if product.has_next %}
