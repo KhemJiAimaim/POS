@@ -1,0 +1,72 @@
+
+<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm p-2 mb-2  rounded">
+    <a href="/" class="navbar-brand"><i class="fa-solid fa-store text-success fa-2x"></i></a>
+    <button type="button" class="navbar-toggler bg-light" data-toggle="collapse"
+    data-target="#nav" name="button"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse justify-content-between" id="nav">
+    <ul class="navbar-nav">
+      <h2>Phacharamon Shop</h2>
+
+      <!--<li class="nav-item dropdown"><a class="nav-link text-dark text-uppercase font-weight-bold px-3 dropdown-toggle"
+        href="" data-toggle="dropdown">Category</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">สินค้าทั้งหมด</a>
+          <a class="dropdown-item" href="#">เสื้อผ้า</a>
+        </div>
+      </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link text-dark text-uppercase font-weight-bold px-3 dropdown-toggle" data-toggle="dropdown">
+            Welcome, Demo<i class="fas fa-user circle"></i>
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="">ประวัติการสั่งซื้อ</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark text-uppercase font-weight-bold px-3" href="">
+            Sign Out <i class="fas fa-sign-out-alt"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark text-uppercase font-weight-bold px-3" href="">
+            Sign Up <i class="fas fa-user-plus"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark text-uppercase font-weight-bold px-3" href="">
+            Sign In <i class="fas fa-sign-in-alt"></i>
+          </a>
+        </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark text-uppercase font-weight-bold px-3" href="">
+          <i class="fas fa-shopping-cart"></i>0
+        </a>
+      </li>-->
+    </ul>
+
+      {% if request.user.is_authenticated %}
+    <form class="form-inline ">
+      <a class="nav-link text-dark text-uppercase font-weight-bold px-3" href="{% url 'index' %}" target="_blank">
+        จัดการร้านค้า
+      </a>
+      <a class="nav-link text-danger text-uppercase font-weight-bold px-3" href="{% url 'signOut' %}">
+        ออกจากระบบ <i class="fas fa-sign-out-alt"></i>
+      </a>
+    </form>
+    {% else %}
+    <i class="fa-solid fa-cat text-success fa-2x px-2"></i>
+    {% endif %}
+
+
+    <!--<form class="form-inline ml-3" action="", method="GET">
+      
+      <div class="input-group">
+        <input type="text" name="title" class="form-control" placeholder="Search">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-success"><i class="fas fa-search"></i></button>
+        </div>
+      </div>
+    </form>-->
+    
+    </div>
+  </nav>

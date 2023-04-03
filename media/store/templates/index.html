@@ -1,0 +1,125 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load static %}
+
+
+
+{% block t %}
+สรุปการซื้อขายสินค้า
+{% endblock %}
+
+{% block nav %}
+วันที่ : {{formatDate}}
+{% endblock %}
+
+{% block content %}
+
+<div class="home-content">
+  <div class="overview-boxes">
+    <div class="box">
+      <div class="right-side">
+        <div class="box-topic" style="font-size: 30px;">จำนวนที่ขาย</div>
+        <div class="number" style="font-size: 30px;">{{transaction}} ครั้ง</div>
+        <!--<div class="indicator">
+            <i class='bx bx-up-arrow-alt'></i>
+            <span class="text">Up from yesterday</span>
+          </div>-->
+      </div>
+      <i class='bx bx-cart-alt cart ml-5'></i>
+    </div>
+    <div class="box">
+      <div class="right-side">
+        <div class="box-topic" style="font-size: 30px;">รวมยอดขาย</div>
+        <div class="number" style="font-size: 30px;">{{total_sales | intcomma}} บาท</div>
+        <!--<div class="indicator">
+            <i class='bx bx-up-arrow-alt'></i>
+            <span class="text">Up from yesterday</span>
+          </div>-->
+      </div>
+      <i class='bx bxs-cart-add cart two ml-5'></i>
+    </div>
+    <div class="box">
+      <div class="right-side">
+        <div class="box-topic" style="font-size: 30px;">ต้นทุนรวม</div>
+        <div class="number" style="font-size: 30px;">{{total_cost | intcomma}} บาท</div>
+        <!--<div class="indicator">
+            <i class='bx bx-up-arrow-alt'></i>
+            <span class="text">Up from yesterday</span>
+          </div>-->
+      </div>
+      <i class='bx bxs-cart-add cart two ml-5 '></i>
+      <!--<i class='bx bxs-cart-download cart four' ></i>-->
+    </div>
+    <div class="box">
+      <div class="right-side">
+        <div class="box-topic" style="font-size: 30px;">กำไรรวม</div>
+        <div class="number" style="font-size: 30px;">{{total_profit | intcomma}} บาท</div>
+        <!--<div class="indicator">
+            <i class='bx bx-down-arrow-alt down'></i>
+            <span class="text">Down From Today</span>
+          </div>-->
+      </div>
+      <i class='bx bxs-cart-add cart two ml-5'></i>
+      <!--<i class='bx bx-cart cart three' ></i>-->
+    </div>
+
+  </div>
+
+  <div class="sales-boxes "style="height: 680px;">
+    <div class="recent-sales box mb-2">
+      <div class="title">
+        <strong>การขายสินค้าล่าสุด</strong></div>
+      <div class="sales-details" >
+        <ul class="details">
+          <li class="topic">วันที่</li>
+          {%for orders in order%}
+          <li>{{orders.created | date:'d M Y'}}</li>
+          {%endfor%}
+        </ul>
+        <ul class="details">
+          <li class="topic">จำนวน</li>
+          {%for orders in order%}
+          <li>{{orders.quantity}} ชิ้น</li>
+          {%endfor%}
+        </ul>
+        <ul class="details">
+          <li class="topic">ยอดรวม</li>
+          {%for orders in order%}
+          <li>{{orders.total | intcomma}} บาท</li>
+          {%endfor%}
+        </ul>
+      </div>
+      
+      <div class="dropdown-divider py-1"></div>
+      <div class="button px-2 py-2">
+        <a href="{% url 'reportSale' %}">ดูทั้งหมด</a>
+      </div>
+      
+    </div>
+
+    <div class="top-sales box mb-2" >
+      <div class="title"><strong>สินค้าขายดี</strong></div>
+      <ul class="top-sales-details">
+        <li>
+          
+          <span class="topic"><strong>ชื่อสินค้า</strong></span>
+          <span class="topic text-center"> <strong>รายละเอียด</strong> </span>
+          <span class="topic text-left"><strong>มีกำไร</strong></span> 
+        </li>
+        {% for profits in profit %}
+        <li>
+          <span class="product">{{profits.nameProduct}}</span>
+          <span class="description"> {{profits.description}} </span>
+          <span class="price">{{profits.profitTotal}} บาท</span> 
+        </li>
+        
+        {%endfor%}
+      </ul>
+      <div class="dropdown-divider py-1" style="width: 30%;" ></div>
+      <div class="button px-1 py-2" style="width: 30%;">
+        <a href="{% url 'profitProduct' %}">ดูทั้งหมด</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock%}

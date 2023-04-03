@@ -1,0 +1,203 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load static %}
+
+<style>
+  .table {
+    width: 80%;
+    margin-bottom: 1rem;
+    color: #000000;
+    margin-left: 10%;
+  }
+</style>
+
+{% block t %}
+<a href="{% url 'product' %}" style="text-decoration: none; color: rgb(0, 0, 0); ">
+  รายการสินค้าทั้งหมด {{products}} ชิ้น
+</a>
+{% endblock %}
+
+{% block nav %}
+    วันที่ : {{formatDate}}
+{% endblock %}
+
+
+{% block content %}
+<div class="home-content" style=" margin-left: 6%;  width: 90%;">
+  
+  <div class="container--fluid">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        <form class="form-inline ml-5" action="{% url 'product' %}" , method="GET">
+          <div class="input-group">
+            <input class="form-control" name="title" type="text" placeholder="ชื่อสินค้า / รหัสสินค้า">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-success"><!--<i class="fa fa-barcode px-1 fa-1x"></i>-->
+                <i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-4 text-center" title="รายงานสินค้าใกล้หมด">
+        <a href="{%url 'pdfProduct' %}">
+          <i class='bx bxs-file-pdf' style="font-size: 45px; color: #d80000;"></i>
+        </a>
+      </div>
+      <div class="col-lg-4 text-center" >
+        <a href="{%url 'add_product' %}">
+          <input type="submit" class="btn btn-success mb-2 mr-2" value="เพิ่มสินค้า">
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <br>
+
+  <table class="table">
+    <thead class="thead-dark" style="font-size: 20px; font-weight: bold; ">
+      <tr>
+        <th scope="col" width="1%" style="text-align: center;">สถานะ</th>
+        <th scope="col" width="10%" style="text-align: center;">วันที่เพิ่ม</th>
+        <th scope="col" width="10%" >รหัสสินค้า</th>
+        <th scope="col" width="10%" >ชื่อสินค้า</th>
+        <th scope="col" width="3%" style="text-align: center;">ราคา</th>
+        <th scope="col" width="3%" style="text-align: center;">ต้นทุน</th>
+        <th scope="col" width="10%" style="text-align: center;">คงเหลือ</th>
+        <th scope="col" width="10%" style="text-align: center;">วันหมดอายุ</th>
+        <th scope="col" width="10%" style="text-align: center;">สถานะคลัง</th>
+        <th scope="col" width="3%" style="text-align: center;">แก้ไข</th>
+        <th scope="col" width="3%" style="text-align: center;">ลบ</th>
+
+      </tr>
+    </thead>
+    <tbody style="font-size: 18px; font-weight: bold;">
+      {% for products in product %}
+      <tr>
+        <td class="px-2 py-1 text-center">
+          {% if products.active == 1 %}
+            {% if products.stock <= 0 %}
+            <span class="badge bg-danger rounded-pill text-white px-3">แสดงสินค้า</span> 
+            {% else %}
+            <span class="badge bg-success rounded-pill text-white px-3">แสดงสินค้า</span>
+            {% endif %}
+          {% else %}
+            {% if products.stock <= 0 %}
+            <span class="badge bg-danger rounded-pill text-white px-3">ไม่แสดงสินค้า</span>
+            {% else %}
+            <span class="badge bg-primary rounded-pill text-white px-3">ไม่แสดงสินค้า</span>
+            {% endif %}
+          {% endif %}
+      </td>
+        <td class="cart_product  text-center">
+          <p>{{products.created | date:'d M Y'}}</p>
+        </td>
+        <td class="cart_product" title="{{ products.description }}">
+          <p>{{products.barcode}}</p>
+        </td>
+        <td class="cart_description" title="{{ products.description }}">
+          <p>{{products.name}}</p>
+        </td>
+        <td class="cart_price text-center">
+          <p>{{products.price}}</p>
+        </td>
+        <td class="cart_cost text-center">
+          <p>{{products.cost}}</p>
+        </td>
+        {% if products.stock <= 0 %} <td class="cart_stock text-danger text-center">
+          <p>{{products.stock}} ชิ้น</p>
+          </td>
+          {% elif products.stock <= 3 %} <td class="cart_stock text-warning text-center">
+            <p>{{products.stock}} ชิ้น</p>
+            </td>
+            {% else %}
+            <td class="cart_stock  text-center">
+              <p>{{products.stock}} ชิ้น</p>
+            </td>
+            {%endif%}
+
+            
+            <td class="cart_exp text-center">
+              <p>{{products.EXP | date:'d M Y'}}</p>
+            </td>
+            
+
+            {% if products.stock <= 0 %} <td class="cart_status">
+              <p class="text-center text-danger " style="font-size: 18px;">
+                สินค้าหมด
+              </p>
+              </td>
+              {% elif products.stock <= 3 %} <td class="cart_status">
+                <p class="text-center text-warning" style="font-size: 18px;">
+                  สินค้าใกล้หมด
+                </p>
+                </td>
+                {% else %}
+                <td class="cart_status">
+                  <p class="text-center" style="font-size: 18px;">
+                    ยังมีสินค้า
+                  </p>
+                </td>
+
+                {%endif%}
+                <td class="cart_edit" style="text-align: center; ">
+                  <a href="{%url 'edit_product' products.id  %}">
+                    <i class='bx bx-edit text-dark'></i>
+                  </a>
+                </td>
+                <td class="cart_del" style="text-align: center;">
+                  <a href="#"
+                    onclick="delProduct({{products.id}})">
+                    <i class='bx bx-message-square-x text-danger'></i>
+                  </a>
+                </td>
+                {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <style>
+    .page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+      }
+      .page-link {
+          position: relative;
+          display: block;
+          padding: .5rem .75rem;
+          margin-left: -1px;
+          line-height: 1.25;
+          color: #28a745;
+          background-color: #fff;
+          border: 1px solid #dee2e6;
+      }
+      .page-link:hover {
+          z-index: 2;
+          color: #28a745;
+          text-decoration: none;
+          background-color: #e9ecef;
+          border-color: #dee2e6;
+      }
+
+      </style>
+        <footer style="position: absolute; width: 100%;">
+            <div class="dropdown-divider"></div>
+            <ul class="pagination justify-content-end" >
+                {% if product.has_previous %}
+                <li class="page-item"><a class="page-link " href="?page=product.previous_page_number">Previous</a></li>
+                {% endif %}
+
+                {% for i in product.paginator.page_range %}
+                <li class="page-item {% if product.number == i %}active{% endif %}">
+                    <a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                {% endfor %}
+
+                {% if product.has_next %}
+                <li class="page-item"><a class="page-link " href="?page={{product.next_page_number}}">Next</a></li>
+                {% endif %}
+            </ul>
+        </footer>
+</div>
+
+{% endblock%}

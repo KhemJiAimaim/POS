@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+<style>
+
+</style>
+
+{% block t %}
+    เพิ่มหมวดหมู่สินค้า
+{% endblock %}
+
+{% block nav %}
+
+{% endblock %}
+{% block content %}
+
+<div class="home-content" style=" margin-left: 10%;  width: 80%;">
+    {% if submitted %}
+    เพิ่มหมวดหมู่สินค้าสำเร็จ
+	{% else %}
+
+		<form action="" method=POST>
+			{% csrf_token %}
+
+			{{ form.as_p }}
+
+            <div align="right">
+                <input type="submit" value="ตกลง" class="btn btn-success">
+            </div>
+		</form>
+	{% endif %}
+</div>
+{% endblock %}
